@@ -1,6 +1,6 @@
 # O Espanhol — Empório Ibérico Gourmet (Brasília, DF)
 
-Site editorial e interativo desenvolvido como protótipo profissional para o domínio **`oespanhol.com.br`**.
+Site editorial e interativo desenvolvido como protótipo profissional  para o domínio **`oespanhol.com.br`**.
 
 ## Recursos incluídos
 - **Identidade visual Editorial Sofisticado** (creme/travertino, vinho Rioja, terracota e tipografia serifada).
