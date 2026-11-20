@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Espanhol — Empório Ibérico Gourmet em Brasília | Jamón, Azeites &amp; Vinhos</title>
+  <meta name="description" content="Delivery curado de Jamón Ibérico 100% Bellota cortado na faca, vinhos de Rioja e Ribera del Duero, azeites de colheita precoce e queijos DOP em Brasília, DF." />
+  <meta property="og:title" content="O Espanhol — Empório Ibérico Gourmet em Brasília" />
+  <meta property="og:description" content="A Espanha servida à mesa de Brasília, cortada na faca e entregue refrigerada no mesmo dia." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar">
+    Entrega refrigerada no mesmo dia em Brasília · <strong>Frete cortesia acima de R$ 350</strong> no Plano Piloto, Lagos, Sudoeste e Noroeste
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#topo" class="brand-mark" aria-label="O Espanhol — Página Inicial">
+        <svg class="brand-crest" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="18" cy="18" r="16.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M18 7.5C14.2 11.2 12.5 14.8 12.5 19.2C12.5 23.2 14.9 26.2 18 27.8C21.1 26.2 23.5 23.2 23.5 19.2C23.5 14.8 21.8 11.2 18 7.5Z" stroke="currentColor" stroke-width="1.15"/>
+          <path d="M18 9.5V27.5" stroke="currentColor" stroke-width="1"/>
+          <circle cx="18" cy="18.2" r="2.1" fill="currentColor"/>
+        </svg>
+        <span class="brand-wordmark">
+          <span class="brand-name">O Espanhol</span>
+          <span class="brand-sub">Empório Ibérico · Brasília</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="#curadoria">Curadoria</a>
+        <a href="#sommelier">Sommelier</a>
+        <a href="#oficio">O Ofício</a>
+        <a href="#clube">Clube &amp; Cestas</a>
+        <a href="#entrega">Entrega DF</a>
+      </nav>
+
+      <div class="header-actions">
+        <button id="open-cart-btn" class="cart-trigger" type="button" aria-label="Abrir sacola">
+          <span>Sacola</span>
+          <span id="cart-count" class="cart-count">0</span>
+        </button>
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true">
+            <path d="M1 1H17M1 7H17M1 13H17" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-nav" class="mobile-nav" aria-label="Navegação móvel">
+      <a href="#curadoria">Curadoria</a>
+      <a href="#sommelier">Sommelier</a>
+      <a href="#oficio">O Ofício</a>
+      <a href="#clube">Clube &amp; Cestas</a>
+      <a href="#entrega">Entrega DF</a>
+    </nav>
+  </header>
+
+  <main id="topo">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="kicker">Brasília · Empório &amp; Delivery Curado</span>
+          <h1 class="hero-title">
+            A Espanha servida à mesa de Brasília, <span class="italic-accent">cortada na faca</span> e entregue no ponto.
+          </h1>
+          <p class="hero-lead">
+            Selecionamos pequenos produtores de Jabugo, Rioja, Jaén e Galícia. Jamón Ibérico 100% Bellota fatiado sob pedido, azeites de colheita precoce e rótulos de guarda entregues em temperatura controlada no Distrito Federal.
+          </p>
+          <div class="hero-actions">
+            <a href="#curadoria" class="btn btn--primary">Explorar a Curadoria</a>
+            <a href="#sommelier" class="btn btn--secondary">Harmonizar sua Mesa</a>
+          </div>
+
+          <div class="hero-facts">
+            <div>
+              <span class="hero-fact-label">Corte na Faca</span>
+              <span class="hero-fact-desc">Fatiado no dia por cortador e embalado a vácuo sem perder aroma.</span>
+            </div>
+            <div>
+              <span class="hero-fact-label">Origem Certificada</span>
+              <span class="hero-fact-desc">Selo D.O.P. e D.O.Ca. em lotes numerados de safra recente.</span>
+            </div>
+            <div>
+              <span class="hero-fact-label">Entrega em 3h no DF</span>
+              <span class="hero-fact-desc">Transporte climatizado da Asa Sul aos Lagos e Noroeste.</span>
+            </div>
+          </div>
+        </div>
+
+        <figure class="hero-figure">
+          <div class="hero-image-frame">
+            <img src="./assets/hero.jpg" alt="Mesa editorial com Jamón Ibérico fatiado na faca, taça de vinho tinto Rioja, azeite extra virgem espanhol, queijo Manchego e azeitonas Gordal" />
+          </div>
+          <figcaption class="hero-caption">
+            <span>Degustação da Casa — Jamón 100% Bellota, Rioja Gran Reserva, Manchego 12 meses &amp; AOVE Picual</span>
+            <span class="hero-caption-origin">Safra 2026</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Origins Strip -->
+    <div class="origins-strip" aria-label="Denominações de origem espanholas">
+      <div class="container">
+        <ul class="origins-list">
+          <li>Jabugo · Huelva</li>
+          <li>D.O.Ca. Rioja</li>
+          <li>Ribera del Duero</li>
+          <li>Jaén · Andaluzia</li>
+          <li>D.O.P. La Mancha</li>
+          <li>Rías Baixas · Galícia</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Curated Catalog -->
+    <section id="curadoria" class="section">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-heading-group">
+            <span class="kicker">Despensa Selecionada</span>
+            <h2 class="section-title">Curadoria de <span class="italic-accent">Origem</span></h2>
+            <p class="section-subtitle">
+              Cada item é provado por nossa curadoria antes de entrar no catálogo. Clique em qualquer peça para consultar notas sensoriais, temperatura ideal e harmonização.
+            </p>
+          </div>
+        </div>
+
+        <div id="catalog-filters" class="catalog-filters" role="tablist" aria-label="Filtrar produtos por categoria">
+          <button class="filter-tab is-active" type="button" role="tab" aria-selected="true" data-category="todos">Todos (8)</button>
+          <button class="filter-tab" type="button" role="tab" aria-selected="false" data-category="jamon">Jamón &amp; Embutidos</button>
+          <button class="filter-tab" type="button" role="tab" aria-selected="false" data-category="vinhos">Vinhos &amp; Vermute</button>
+          <button class="filter-tab" type="button" role="tab" aria-selected="false" data-category="queijos">Queijos &amp; Azeites</button>
+          <button class="filter-tab" type="button" role="tab" aria-selected="false" data-category="conservas">Conservas</button>
+          <button class="filter-tab" type="button" role="tab" aria-selected="false" data-category="cestas">Caixas Presente</button>
+        </div>
+
+        <div id="product-grid" class="product-grid" aria-live="polite">
+          <!-- Populated dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Sommelier & Table Composer -->
+    <section id="sommelier" class="section section--linen">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-heading-group">
+            <span class="kicker">Concierge Gastronômico</span>
+            <h2 class="section-title">Monte sua <span class="italic-accent">Mesa Ibérica</span> sob medida</h2>
+            <p class="section-subtitle">
+              Informe a ocasião e o número de convidados. Calculamos as porções exatas de jamón, queijos, conservas e vinhos — com 8% de cortesia na seleção completa.
+            </p>
+          </div>
+        </div>
+
+        <div class="sommelier-layout">
+          <div class="sommelier-controls">
+            <div class="control-group">
+              <div class="control-label">
+                <span>1. Escolha a ocasião</span>
+              </div>
+              <div id="occasion-grid" class="occasion-grid">
+                <button class="occasion-btn is-active" type="button" data-occasion="aperitivo">
+                  <span class="occasion-title">Aperitivo ao Pôr do Sol</span>
+                  <span class="occasion-sub">Varanda, conversa leve, vermute e conservas</span>
+                </button>
+                <button class="occasion-btn" type="button" data-occasion="jantar">
+                  <span class="occasion-title">Jantar Íntimo</span>
+                  <span class="occasion-sub">Mesa posta, tintos de guarda e Bellota</span>
+                </button>
+                <button class="occasion-btn" type="button" data-occasion="recepcao">
+                  <span class="occasion-title">Recepção no Lago</span>
+                  <span class="occasion-sub">Tábua farta para receber amigos ou embaixadas</span>
+                </button>
+                <button class="occasion-btn" type="button" data-occasion="presente">
+                  <span class="occasion-title">Presente de Autor</span>
+                  <span class="occasion-sub">Caixa em madeira com laço de linho e cartão</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="guest-slider">
+                <span>2. Número de convidados</span>
+                <span id="guest-readout" class="control-value tabular">4 pessoas</span>
+              </label>
+              <input id="guest-slider" class="range-slider" type="range" min="2" max="14" step="2" value="4" />
+              <div class="range-marks">
+                <span>2</span>
+                <span>4</span>
+                <span>6</span>
+                <span>8</span>
+                <span>10</span>
+                <span>12</span>
+                <span>14</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sommelier-result" aria-live="polite">
+            <div class="result-header">
+              <div>
+                <span class="kicker">Sugestão do Curador</span>
+                <h3 id="pairing-title" class="result-title">Aperitivo ao Pôr do Sol</h3>
+              </div>
+              <span id="pairing-serves" class="result-badge">Para 4 pessoas</span>
+            </div>
+
+            <ul id="pairing-list" class="pairing-list">
+              <!-- Populated dynamically by app.js -->
+            </ul>
+
+            <p id="pairing-note" class="curator-note"></p>
+
+            <div class="result-footer">
+              <div class="result-pricing">
+                <span id="pairing-original" class="result-original tabular"></span>
+                <span id="pairing-total" class="result-total tabular"></span>
+                <span id="pairing-saving" class="result-saving"></span>
+              </div>
+              <button id="add-pairing-btn" class="btn btn--primary" type="button">
+                Adicionar Seleção à Sacola
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Editorial Story / Craft -->
+    <section id="oficio" class="section">
+      <div class="container story-grid reveal">
+        <div class="story-visual">
+          <img class="story-img-tall" src="./assets/jamon.jpg" alt="Fatias finas e translúcidas de Jamón Ibérico de Bellota dispostas em prato de cerâmica artesanal" />
+          <img class="story-img-small" src="./assets/manchego.jpg" alt="Azeite extra virgem espanhol sendo vertido sobre queijo Manchego curado com azeitonas e amêndoas Marcona" />
+        </div>
+
+        <div class="story-copy">
+          <span class="kicker">O Ofício &amp; A Casa</span>
+          <h2 class="section-title">Da dehesa de azinheiras às <span class="italic-accent">mesas de Brasília</span>.</h2>
+          <p style="margin-top: 1.35rem;">
+            O Jamón Ibérico 100% Bellota não deve ser fatiado em máquina industrial: o calor da lâmina altera a gordura oleica e apaga as notas de avelã e bosque. Em nossa sala climatizada em Brasília, cada peça descansa no <em>jamonero</em> e é cortada manualmente na faca no mesmo dia da entrega.
+          </p>
+          <p>
+            Trabalhamos exclusivamente com importações pequenas e safras rastreáveis — de olivais centenários de Jaén a bodegas familiares em Haro e Ribera del Duero — para levar à sua casa a hospitalidade despretensiosa e rigorosa de um empório madrilenho.
+          </p>
+
+          <div class="story-pillars">
+            <div>
+              <span class="pillar-num">36 meses</span>
+              <h3 class="pillar-title">Cura Natural</h3>
+              <p class="pillar-text">Secagem lenta em adegas de serra, respeitando as estações sem aceleradores artificiais.</p>
+            </div>
+            <div>
+              <span class="pillar-num">22 °C</span>
+              <h3 class="pillar-title">Ponto de Serviço</h3>
+              <p class="pillar-text">Cada envelope acompanha guia simples de têmpera para despertar o brilho da gordura ibérica.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Clube La Mesa & Corporate Gifts -->
+    <section id="clube" class="section section--deep">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-heading-group">
+            <span class="kicker kicker--light">Assinatura &amp; Presentes Diplomáticos</span>
+            <h2 class="section-title section-title--light">Clube <span class="italic-accent--light">La Mesa</span> &amp; Edições Corporativas</h2>
+            <p class="section-subtitle section-subtitle--light">
+              Receba mensalmente nossa seleção inédita na primeira sexta-feira do mês ou encomende caixas em madeira natural personalizadas para presentes institucionais e embaixadas.
+            </p>
+          </div>
+        </div>
+
+        <div class="club-grid">
+          <article class="club-card reveal">
+            <span class="club-tag">Assinatura Mensal</span>
+            <h3 class="club-name">Plano Tertúlia</h3>
+            <div class="club-price tabular">R$ 390 <span>/ mês</span></div>
+            <ul class="club-list">
+              <li>1 envelope 100g de Jamón ou Paleta Ibérica cortada na faca</li>
+              <li>1 garrafa de vinho espanhol curado (Crianza ou Reserva)</li>
+              <li>1 queijo DOP ou conserva das Rías Gallegas</li>
+              <li>Caderno editorial com notas da safra e receita de tapas</li>
+              <li>Entrega refrigerada inclusa no DF</li>
+            </ul>
+            <button class="btn btn--ghost-light club-add-btn" type="button" data-plan-id="clube-tertulia">
+              Assinar Plano Tertúlia
+            </button>
+          </article>
+
+          <article class="club-card club-card--featured reveal">
+            <span class="club-tag">Mais Escolhido · Lotes Raros</span>
+            <h3 class="club-name">Plano Gran Reserva</h3>
+            <div class="club-price tabular">R$ 680 <span>/ mês</span></div>
+            <ul class="club-list">
+              <li>2 envelopes (200g) de Jamón 100% Bellota Jabugo DOP</li>
+              <li>2 rótulos de guarda (Rioja Gran Reserva / Ribera del Duero)</li>
+              <li>1 Azeite Virgem Extra de colheita precoce + Queijo Manchego</li>
+              <li>Acesso antecipado a safras limitadas e degustações privadas</li>
+              <li>Concierge prioritário com entrega expressa em 2h</li>
+            </ul>
+            <button class="btn btn--light club-add-btn" type="button" data-plan-id="clube-gran-reserva">
+              Assinar Gran Reserva
+            </button>
+          </article>
+
+          <article class="club-card reveal">
+            <span class="club-tag">Sob Encomenda · DF</span>
+            <h3 class="club-name">Presentes &amp; Embaixadas</h3>
+            <div class="club-price tabular">Sob consulta <span>· a partir de 6 caixas</span></div>
+            <ul class="club-list">
+              <li>Caixas em madeira natural forradas em linho cru</li>
+              <li>Cartão impresso em papel algodão com assinatura do remetente</li>
+              <li>Curadoria ajustada ao perfil do homenageado ou evento</li>
+              <li>Opção de cortador de jamón ao vivo para recepções no Lago Sul</li>
+              <li>Faturamento para empresas e entregas agendadas</li>
+            </ul>
+            <button class="btn btn--ghost-light" type="button" id="corporate-inquiry-btn">
+              Solicitar Proposta Concierge
+            </button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Delivery DF Interactive Zone Checker -->
+    <section id="entrega" class="section">
+      <div class="container delivery-box reveal">
+        <div>
+          <span class="kicker">Logística Refrigerada · Distrito Federal</span>
+          <h2 class="section-title">Do nosso atelier à sua <span class="italic-accent">sala de jantar</span>.</h2>
+          <p class="section-subtitle">
+            Selecione sua região administrativa em Brasília para consultar prazo estimado de entrega em bolsa térmica refrigerada e condições de frete cortesia.
+          </p>
+
+          <div id="zone-buttons" class="zone-buttons" role="group" aria-label="Selecionar região de Brasília">
+            <!-- Populated dynamically by app.js -->
+          </div>
+        </div>
+
+        <div class="delivery-card" aria-live="polite">
+          <div class="delivery-card-top">
+            <h3 id="delivery-zone-name" class="delivery-zone-name">Lago Sul</h3>
+            <span class="delivery-status">Rota climatizada ativa</span>
+          </div>
+
+          <div class="delivery-metrics">
+            <div>
+              <span class="delivery-metric-label">Prazo médio</span>
+              <span id="delivery-eta" class="delivery-metric-val">Até 2h30</span>
+            </div>
+            <div>
+              <span class="delivery-metric-label">Taxa de entrega</span>
+              <span id="delivery-fee" class="delivery-metric-val tabular">R$ 24,00</span>
+            </div>
+            <div>
+              <span class="delivery-metric-label">Frete cortesia</span>
+              <span id="delivery-free-min" class="delivery-metric-val tabular">Acima de R$ 350</span>
+            </div>
+          </div>
+
+          <p id="delivery-note" class="delivery-note">
+            Pedidos confirmados até às 18h seguem no mesmo dia em embalagem térmica com gelo reutilizável. Retirada sem custo disponível no Atelier Asa Sul (CLS 405).
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name">O Espanhol</div>
+          <p style="font-size: 0.88rem; line-height: 1.65; margin: 0 0 1rem; max-width: 34ch;">
+            Empório Ibérico Gourmet em Brasília. Curadoria de Jamón Bellota, vinhos de guarda, azeites e conservas artesanais da Espanha.
+          </p>
+          <p style="font-size: 0.78rem; color: var(--gold-soft); margin: 0;">oespanhol.com.br · contato@oespanhol.com.br</p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Curadoria</h4>
+          <ul class="footer-links">
+            <li><a href="#curadoria">Jamón &amp; Embutidos</a></li>
+            <li><a href="#curadoria">Vinhos &amp; Vermute</a></li>
+            <li><a href="#curadoria">Queijos &amp; Azeites</a></li>
+            <li><a href="#curadoria">Caixas Presente</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Experiências</h4>
+          <ul class="footer-links">
+            <li><a href="#sommelier">Sommelier de Mesa</a></li>
+            <li><a href="#clube">Clube La Mesa</a></li>
+            <li><a href="#clube">Presentes Corporativos</a></li>
+            <li><a href="#entrega">Zonas de Entrega DF</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Atelier Brasília</h4>
+          <ul class="footer-links">
+            <li>CLS 405, Bloco B · Asa Sul, Brasília – DF</li>
+            <li>Terça a Sábado · 10h às 20h</li>
+            <li>Domingo · 10h às 15h (retirada e delivery)</li>
+            <li>Concierge: (61) 99900-1928</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 O Espanhol · Empório Ibérico Gourmet — Brasília, DF.</span>
+        <span>Protótipo conceitual demonstrativo desenvolvido para o domínio oespanhol.com.br</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared Backdrop Overlay -->
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+  <!-- Slide-Over Cart Drawer -->
+  <aside id="cart-drawer" class="cart-drawer" aria-label="Sacola de compras" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Sua Sacola</h2>
+      <button id="close-cart-btn" class="icon-close" type="button" aria-label="Fechar sacola">&times;</button>
+    </div>
+
+    <div class="free-shipping-bar">
+      <div id="shipping-bar-text">Adicione R$ 350,00 para ganhar frete refrigerado cortesia em Brasília.</div>
+      <div class="progress-track">
+        <div id="shipping-progress" class="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="cart-items-container" class="drawer-body">
+      <!-- Rendered by app.js -->
+    </div>
+
+    <div class="drawer-footer">
+      <div class="drawer-zone-select">
+        <label for="cart-zone-select">Região de entrega (DF):</label>
+        <select id="cart-zone-select"></select>
+      </div>
+      <div class="summary-line">
+        <span>Subtotal</span>
+        <span id="cart-subtotal" class="tabular">R$ 0,00</span>
+      </div>
+      <div class="summary-line">
+        <span>Entrega refrigerada</span>
+        <span id="cart-shipping" class="tabular">—</span>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <span id="cart-total" class="tabular">R$ 0,00</span>
+      </div>
+      <button id="checkout-btn" class="btn btn--primary" type="button" style="width: 100%;">
+        Finalizar com o Concierge
+      </button>
+    </div>
+  </aside>
+
+  <!-- Product Tasting Sheet Modal -->
+  <div id="product-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-product-title">
+    <div class="modal-panel">
+      <button id="close-product-modal" class="icon-close modal-close" type="button" aria-label="Fechar ficha">&times;</button>
+      <div id="product-modal-body" class="product-modal-grid">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout / Concierge Confirmation Modal -->
+  <div id="checkout-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="checkout-modal-title">
+    <div class="modal-panel">
+      <button id="close-checkout-modal" class="icon-close modal-close" type="button" aria-label="Fechar resumo">&times;</button>
+      <div class="checkout-modal-body">
+        <span class="kicker">Pedido Pronto para o Concierge</span>
+        <h3 id="checkout-modal-title" style="font-size: 1.9rem; margin-top: 0.4rem;">Resumo do seu pedido no O Espanhol</h3>
+        <p style="color: var(--ink-secondary); font-size: 0.92rem; margin-top: 0.65rem;">
+          Em operação real, este botão abre diretamente o WhatsApp do Concierge ou checkout PIX/cartão. Copie o resumo abaixo para testar a experiência completa:
+        </p>
+        <div id="order-summary-text" class="order-summary-box"></div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button id="copy-order-btn" class="btn btn--primary" type="button">Copiar Resumo do Pedido</button>
+          <button id="clear-and-close-btn" class="btn btn--secondary" type="button">Concluir &amp; Limpar Sacola</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
