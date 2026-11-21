@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Espanhol — Backoffice Operacional (RBAC)</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body>
+
+  <!-- Login View -->
+  <section id="login-view" class="login-shell">
+    <div class="login-card">
+      <span class="login-kicker">O Espanhol · Acesso Corporativo</span>
+      <h1>Backoffice Operacional</h1>
+      <p class="login-sub">Autentique-se com seu e-mail corporativo. As visões e ações são carregadas conforme o seu papel (RBAC).</p>
+
+      <div id="login-error" class="alert-error" hidden></div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="login-email">E-mail corporativo</label>
+          <input id="login-email" type="email" required autocomplete="username" placeholder="equipe@oespanhol.com.br" />
+        </div>
+        <div class="field">
+          <label for="login-password">Senha</label>
+          <input id="login-password" type="password" required autocomplete="current-password" />
+        </div>
+        <button id="login-btn" class="btn btn--primary" type="submit" style="width:100%;">Entrar no Painel</button>
+      </form>
+
+      <p style="margin:1.25rem 0 0; font-size:0.78rem; color:var(--muted);">
+        <a href="../index.html" style="text-decoration:underline;">← Voltar para a vitrine O Espanhol</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Authenticated Backoffice Shell -->
+  <div id="app-view" hidden>
+    <header class="admin-header">
+      <div class="admin-brand">
+        <strong>O Espanhol</strong>
+        <span>Operação · Brasília DF</span>
+      </div>
+      <div class="admin-user-bar">
+        <span id="staff-name"></span>
+        <span id="staff-role" class="role-badge"></span>
+        <a href="../index.html" class="btn btn--ghost-light btn--sm">Vitrine</a>
+        <button id="logout-btn" class="btn btn--ghost-light btn--sm" type="button">Sair</button>
+      </div>
+    </header>
+
+    <nav id="admin-tabs" class="admin-tabs" aria-label="Módulos operacionais"></nav>
+
+    <main class="admin-main">
+      <!-- 1. Orders Queue -->
+      <section id="panel-orders" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Fila de Pedidos</h2>
+          <div class="filters-row">
+            <select id="filter-order-status">
+              <option value="">Todos os status permitidos</option>
+              <option value="PENDENTE_PAGAMENTO">Pendente Pagamento</option>
+              <option value="PAGO">Pago</option>
+              <option value="EM_PREPARO">Em Preparo</option>
+              <option value="PRONTO_EXPEDICAO">Pronto p/ Expedição</option>
+              <option value="SAIU_PARA_ENTREGA">Saiu p/ Entrega</option>
+              <option value="ENTREGUE">Entregue</option>
+              <option value="CANCELADO">Cancelado</option>
+              <option value="ESTORNADO">Estornado</option>
+            </select>
+            <select id="filter-order-zone">
+              <option value="">Todas as zonas do DF</option>
+              <option value="lago-sul">Lago Sul</option>
+              <option value="asa-sul">Asa Sul</option>
+              <option value="asa-norte">Asa Norte</option>
+              <option value="sudoeste">Sudoeste / Octogonal</option>
+              <option value="noroeste">Noroeste</option>
+              <option value="lago-norte">Lago Norte</option>
+              <option value="park-way">Park Way</option>
+              <option value="aguas-claras">Águas Claras</option>
+            </select>
+            <input id="filter-order-q" type="search" placeholder="Código ou cliente..." />
+            <button id="refresh-orders-btn" class="btn btn--secondary btn--sm" type="button">Atualizar</button>
+          </div>
+        </div>
+        <div id="orders-container" class="orders-list"></div>
+      </section>
+
+      <!-- 2. Catalog & Stock (ADMIN / GERENTE_OP) -->
+      <section id="panel-catalog" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Catálogo, Preços &amp; Estoque (59 Itens)</h2>
+          <div class="filters-row">
+            <input id="filter-catalog-q" type="search" placeholder="Buscar produto ou região..." />
+            <button id="refresh-catalog-btn" class="btn btn--secondary btn--sm" type="button">Atualizar</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU / Região</th>
+                <th>Produto</th>
+                <th>Preço (R$)</th>
+                <th>Estoque</th>
+                <th>Sob Encomenda</th>
+                <th>Ativo</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. Corporate Inquiries (CONCIERGE / GERENTE_OP / ADMIN) -->
+      <section id="panel-inquiries" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Presentes Corporativos &amp; Embaixadas</h2>
+          <button id="refresh-inquiries-btn" class="btn btn--secondary btn--sm" type="button">Atualizar</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Instituição / Contato</th>
+                <th>Caixas / Data</th>
+                <th>Regiões / Cortador</th>
+                <th>Status</th>
+                <th>Atualizar</th>
+              </tr>
+            </thead>
+            <tbody id="inquiries-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. Reports (ADMIN / GERENTE_OP) -->
+      <section id="panel-reports" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Relatórios Gerenciais (Últimos 30 dias)</h2>
+          <button id="refresh-reports-btn" class="btn btn--secondary btn--sm" type="button">Atualizar</button>
+        </div>
+        <div id="reports-kpis" class="kpi-grid"></div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.25rem;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Região Espanhola</th><th>Unidades</th><th>Receita</th></tr></thead>
+              <tbody id="reports-regions-tbody"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Zona DF</th><th>Pedidos</th><th>Total</th></tr></thead>
+              <tbody id="reports-zones-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Staff & RBAC (ADMIN only) -->
+      <section id="panel-staff" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Equipe &amp; Controle de Acesso (RBAC)</h2>
+        </div>
+
+        <form id="create-staff-form" class="staff-form-box">
+          <h3 style="font-size:1.15rem; margin-bottom:0.85rem;">Cadastrar Novo Empregado</h3>
+          <div class="staff-form-grid">
+            <div class="field" style="margin:0;">
+              <label for="st-name">Nome completo</label>
+              <input id="st-name" type="text" required />
+            </div>
+            <div class="field" style="margin:0;">
+              <label for="st-email">E-mail corporativo</label>
+              <input id="st-email" type="email" required />
+            </div>
+            <div class="field" style="margin:0;">
+              <label for="st-role">Papel RBAC</label>
+              <select id="st-role" required>
+                <option value="COZINHA_CORTE">COZINHA_CORTE</option>
+                <option value="LOGISTICA_ENTREGA">LOGISTICA_ENTREGA</option>
+                <option value="CONCIERGE">CONCIERGE</option>
+                <option value="GERENTE_OP">GERENTE_OP</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0;">
+              <label for="st-pass">Senha inicial (mín. 10 chars)</label>
+              <input id="st-pass" type="password" minlength="10" required />
+            </div>
+            <button class="btn btn--primary" type="submit">Criar Conta</button>
+          </div>
+        </form>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome / E-mail</th>
+                <th>Papel</th>
+                <th>Status</th>
+                <th>Último Login</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="staff-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 6. Audit Logs (ADMIN only) -->
+      <section id="panel-audit" class="admin-panel" hidden>
+        <div class="panel-toolbar">
+          <h2 style="font-size:1.6rem;">Trilha de Auditoria (audit_logs)</h2>
+          <button id="refresh-audit-btn" class="btn btn--secondary btn--sm" type="button">Atualizar</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Empregado</th>
+                <th>Ação</th>
+                <th>Entidade</th>
+                <th>IP</th>
+                <th>Alterações</th>
+              </tr>
+            </thead>
+            <tbody id="audit-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="admin-toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="./admin.js"></script>
+</body>
+</html>

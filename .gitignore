@@ -1,0 +1,12 @@
+# Segredos locais e credenciais da KingHost
+.env
+.env.*
+!.env.example
+app_private/config.local.php
+
+# Arquivos temporários e backups locais
+*.log
+*.bak
+*.sql.gz
+.DS_Store
+Thumbs.db

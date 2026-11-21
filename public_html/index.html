@@ -84,7 +84,7 @@
           <div class="hero-facts">
             <div>
               <span class="hero-fact-label">17 Comunidades</span>
-              <span class="hero-fact-desc">56 pratos típicos, queijos D.O.P., conservas e rótulos regionais.</span>
+              <span class="hero-fact-desc">56 pratos regionais + caixas e clube com estoque em tempo real.</span>
             </div>
             <div>
               <span class="hero-fact-label">Corte na Faca</span>
@@ -136,7 +136,6 @@
           </div>
         </div>
 
-        <!-- Toolbar: Macro-Regions + Search + View Mode -->
         <div class="atlas-toolbar">
           <div id="macro-tabs" class="macro-tabs" role="tablist" aria-label="Filtrar por macrorregião da Espanha">
             <button class="macro-tab is-active" type="button" role="tab" aria-selected="true" data-macro="todas">Todas (17)</button>
@@ -162,7 +161,6 @@
           </div>
         </div>
 
-        <!-- Interactive Map + 17-Community Index (shown in "Por Região" mode) -->
         <div id="atlas-navigator" class="atlas-grid">
           <div class="atlas-map-card">
             <div class="atlas-map-head">
@@ -170,9 +168,7 @@
               <span class="atlas-map-hint">Clique em um número (01–17)</span>
             </div>
 
-            <!-- Hand-crafted Editorial SVG Map of Spain + Baleares + Canárias -->
             <svg id="spain-atlas-svg" class="spain-atlas-svg" viewBox="0 0 600 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa interativo das 17 Comunidades Autônomas da Espanha">
-              <!-- Subtle cartographic grid lines -->
               <g stroke="rgba(31,23,20,0.06)" stroke-width="1" stroke-dasharray="3 4">
                 <line x1="20" y1="110" x2="580" y2="110"/>
                 <line x1="20" y1="215" x2="580" y2="215"/>
@@ -181,35 +177,23 @@
                 <line x1="320" y1="20" x2="320" y2="410"/>
                 <line x1="480" y1="20" x2="480" y2="410"/>
               </g>
-
-              <!-- Sea labels -->
               <text x="215" y="42" fill="#827167" font-size="9.5" letter-spacing="2.8" font-style="italic">MAR CANTÁBRICO</text>
               <text x="442" y="318" fill="#827167" font-size="9.5" letter-spacing="2.4" font-style="italic">MEDITERRÂNEO</text>
               <text x="38" y="198" fill="#827167" font-size="9" letter-spacing="2.2" font-style="italic">ATLÂNTICO</text>
-
-              <!-- Muted Portugal silhouette for geographic context -->
               <path d="M126 122 L152 126 L156 172 L144 218 L148 278 L128 308 L104 302 L98 258 L112 206 L108 158 Z"
                     fill="#EFE7DC" stroke="rgba(31,23,20,0.14)" stroke-width="1"/>
               <text x="116" y="232" fill="#9E8E83" font-size="8" letter-spacing="1.8" transform="rotate(-78 116 232)">PORTUGAL</text>
-
-              <!-- Mainland Spain artistic editorial silhouette -->
               <path d="M84 82 L134 62 L212 58 L294 60 L368 74 L436 96 L488 112 L478 148 L442 184 L424 236 L402 288 L368 326 L312 346 L246 356 L192 348 L150 318 L148 278 L144 218 L156 172 L152 126 L126 122 L92 124 L76 104 Z"
                     fill="#F4ECE1" stroke="#B7A79B" stroke-width="1.4" stroke-linejoin="round"/>
-
-              <!-- Subtle internal geographic arcs (Ebro / Douro / Guadalquivir hints) -->
               <path d="M156 136 Q240 130 330 144" fill="none" stroke="rgba(107,29,43,0.12)" stroke-width="1"/>
               <path d="M168 296 Q248 286 334 268" fill="none" stroke="rgba(107,29,43,0.12)" stroke-width="1"/>
               <path d="M294 74 Q362 118 438 158" fill="none" stroke="rgba(107,29,43,0.12)" stroke-width="1"/>
-
-              <!-- Balearic Islands -->
               <g fill="#F4ECE1" stroke="#B7A79B" stroke-width="1.2">
                 <ellipse cx="524" cy="235" rx="18" ry="11" transform="rotate(-14 524 235)"/>
                 <ellipse cx="556" cy="222" rx="8" ry="5" transform="rotate(10 556 222)"/>
                 <ellipse cx="486" cy="254" rx="8" ry="5" transform="rotate(-18 486 254)"/>
               </g>
               <text x="488" y="212" fill="#827167" font-size="8.5" letter-spacing="1.6">BALEARES</text>
-
-              <!-- Canary Islands Cartographic Inset -->
               <g>
                 <rect x="24" y="346" width="166" height="68" rx="2" fill="#FAF6F0" stroke="rgba(31,23,20,0.2)" stroke-dasharray="3 3"/>
                 <text x="34" y="361" fill="#827167" font-size="8" letter-spacing="1.6">ILHAS CANÁRIAS (ATLÂNTICO)</text>
@@ -221,16 +205,12 @@
                   <ellipse cx="166" cy="378" rx="5" ry="8" transform="rotate(24 166 378)"/>
                 </g>
               </g>
-
-              <!-- Compass Rose (top right) -->
               <g transform="translate(546 56)" stroke="#9A887B" stroke-width="1" fill="none" opacity="0.7">
                 <circle cx="0" cy="0" r="14"/>
                 <path d="M0 -18 L0 18 M-18 0 L18 0"/>
                 <polygon points="0,-14 3,-3 0,-5 -3,-3" fill="#6B1D2B" stroke="none"/>
                 <text x="0" y="-21" fill="#6B1D2B" stroke="none" font-size="8" text-anchor="middle" font-weight="600">N</text>
               </g>
-
-              <!-- Dynamic 17 Community Pins populated by app.js -->
               <g id="atlas-map-pins"></g>
             </svg>
 
@@ -240,21 +220,11 @@
             </div>
           </div>
 
-          <!-- 17-Community Directory Index -->
-          <div id="region-directory" class="region-directory" aria-label="Lista das 17 Comunidades Autônomas">
-            <!-- Populated dynamically by app.js -->
-          </div>
+          <div id="region-directory" class="region-directory" aria-label="Lista das 17 Comunidades Autônomas"></div>
         </div>
 
-        <!-- Single-Region Editorial Dossier (Default View) -->
-        <div id="regional-dossier" class="regional-dossier" aria-live="polite">
-          <!-- Populated dynamically by app.js -->
-        </div>
-
-        <!-- Full Menu / Search Results Container (Hidden unless toggled or searching) -->
-        <div id="full-menu-container" class="full-menu-wrap" hidden aria-live="polite">
-          <!-- Populated dynamically by app.js -->
-        </div>
+        <div id="regional-dossier" class="regional-dossier" aria-live="polite"></div>
+        <div id="full-menu-container" class="full-menu-wrap" hidden aria-live="polite"></div>
       </div>
     </section>
 
@@ -266,7 +236,7 @@
             <span class="kicker">Concierge Gastronômico</span>
             <h2 class="section-title">Rotas <span class="italic-accent">Regionais</span> para sua Mesa</h2>
             <p class="section-subtitle">
-              Escolha uma rota gastronômica pela Espanha e o número de convidados. Nosso curador calcula as quantidades exatas de pratos, queijos e garrafas — com 8% de cortesia na seleção completa.
+              Escolha uma rota gastronômica pela Espanha e o número de convidados. Nosso curador calcula as quantidades exatas — com 8% de cortesia validados no fechamento do pedido.
             </p>
           </div>
         </div>
@@ -274,9 +244,7 @@
         <div class="sommelier-layout">
           <div class="sommelier-controls">
             <div class="control-group">
-              <div class="control-label">
-                <span>1. Escolha a rota regional</span>
-              </div>
+              <div class="control-label"><span>1. Escolha a rota regional</span></div>
               <div id="occasion-grid" class="occasion-grid">
                 <button class="occasion-btn is-active" type="button" data-occasion="sul">
                   <span class="occasion-title">Rota do Sul &amp; Dehesa</span>
@@ -304,13 +272,7 @@
               </label>
               <input id="guest-slider" class="range-slider" type="range" min="2" max="14" step="2" value="4" />
               <div class="range-marks">
-                <span>2</span>
-                <span>4</span>
-                <span>6</span>
-                <span>8</span>
-                <span>10</span>
-                <span>12</span>
-                <span>14</span>
+                <span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span>
               </div>
             </div>
           </div>
@@ -325,7 +287,6 @@
             </div>
 
             <ul id="pairing-list" class="pairing-list"></ul>
-
             <p id="pairing-note" class="curator-note"></p>
 
             <div class="result-footer">
@@ -347,8 +308,8 @@
     <section id="oficio" class="section">
       <div class="container story-grid reveal">
         <div class="story-visual">
-          <img class="story-img-tall" src="./assets/jamon.jpg" alt="Fatias translúcidas de Jamón Ibérico de Bellota cortado na faca em prato de cerâmica artesanal" />
-          <img class="story-img-small" src="./assets/paella.jpg" alt="Paella Valenciana autêntica em paellera de aço sobre travertino sob luz mediterrânea" />
+          <img class="story-img-tall" src="./assets/jamon.jpg" alt="Fatias translúcidas de Jamón Ibérico de Bellota cortado na faca" />
+          <img class="story-img-small" src="./assets/paella.jpg" alt="Paella Valenciana autêntica em paellera de aço" />
         </div>
 
         <div class="story-copy">
@@ -451,7 +412,6 @@
           <p class="section-subtitle">
             Selecione sua região administrativa em Brasília para consultar prazo estimado de entrega em bolsa térmica refrigerada e condições de frete cortesia.
           </p>
-
           <div id="zone-buttons" class="zone-buttons" role="group" aria-label="Selecionar região de Brasília"></div>
         </div>
 
@@ -521,7 +481,7 @@
             <li>CLS 405, Bloco B · Asa Sul, Brasília – DF</li>
             <li>Terça a Sábado · 10h às 20h</li>
             <li>Domingo · 10h às 15h (retirada e delivery)</li>
-            <li>Concierge: (61) 99900-1928</li>
+            <li><a href="./admin/" style="color: var(--gold-soft);">Área Operacional (Equipe)</a></li>
           </ul>
         </div>
       </div>
@@ -561,6 +521,10 @@
         <span>Subtotal</span>
         <span id="cart-subtotal" class="tabular">R$ 0,00</span>
       </div>
+      <div class="summary-line" id="cart-discount-row" hidden>
+        <span style="color: var(--olive);">Cortesia Rota Sommelier (8%)</span>
+        <span id="cart-discount" class="tabular" style="color: var(--olive);">-R$ 0,00</span>
+      </div>
       <div class="summary-line">
         <span>Entrega refrigerada</span>
         <span id="cart-shipping" class="tabular">—</span>
@@ -570,7 +534,7 @@
         <span id="cart-total" class="tabular">R$ 0,00</span>
       </div>
       <button id="checkout-btn" class="btn btn--primary" type="button" style="width: 100%;">
-        Finalizar com o Concierge
+        Finalizar Pedido
       </button>
     </div>
   </aside>
@@ -583,21 +547,199 @@
     </div>
   </div>
 
-  <!-- Checkout / Concierge Confirmation Modal -->
+  <!-- Real Checkout Modal (DF Address + Fulfillment + Payment + Receipt) -->
   <div id="checkout-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="checkout-modal-title">
     <div class="modal-panel">
-      <button id="close-checkout-modal" class="icon-close modal-close" type="button" aria-label="Fechar resumo">&times;</button>
+      <button id="close-checkout-modal" class="icon-close modal-close" type="button" aria-label="Fechar checkout">&times;</button>
       <div class="checkout-modal-body">
-        <span class="kicker">Pedido Pronto para o Concierge</span>
-        <h3 id="checkout-modal-title" style="font-size: 1.9rem; margin-top: 0.4rem;">Resumo do seu pedido no O Espanhol</h3>
-        <p style="color: var(--ink-secondary); font-size: 0.92rem; margin-top: 0.65rem;">
-          Cada item é identificado com sua Comunidade Autônoma de origem e ritual de preparo. Copie o resumo abaixo para enviar ao Concierge:
-        </p>
-        <div id="order-summary-text" class="order-summary-box"></div>
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-          <button id="copy-order-btn" class="btn btn--primary" type="button">Copiar Resumo do Pedido</button>
-          <button id="clear-and-close-btn" class="btn btn--secondary" type="button">Concluir &amp; Limpar Sacola</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+          <span class="kicker">Fechamento de Pedido · Brasília, DF</span>
+          <span id="checkout-api-badge" class="api-mode-pill">Modo Conectado</span>
         </div>
+        <h3 id="checkout-modal-title" style="font-size: 1.85rem; margin-top: 0.4rem;">Dados de Entrega &amp; Pagamento</h3>
+
+        <!-- Step 1: Checkout Form -->
+        <form id="checkout-form" class="checkout-form">
+          <div id="checkout-error" class="form-error-banner" hidden></div>
+
+          <h4 class="form-section-title">1. Seus dados</h4>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="co-name">Nome completo *</label>
+              <input id="co-name" name="full_name" type="text" required placeholder="Ex.: Maria Clara Mendes" />
+            </div>
+            <div class="field-group">
+              <label for="co-phone">Telefone / WhatsApp (com DDD) *</label>
+              <input id="co-phone" name="phone" type="tel" required placeholder="(61) 99999-0000" />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="co-email">E-mail *</label>
+              <input id="co-email" name="email" type="email" required placeholder="voce@exemplo.com.br" />
+            </div>
+            <div class="field-group">
+              <label for="co-cpf">CPF (para nota fiscal)</label>
+              <input id="co-cpf" name="cpf" type="text" placeholder="000.000.000-00" />
+            </div>
+          </div>
+
+          <h4 class="form-section-title">2. Entrega refrigerada ou retirada</h4>
+          <div class="fulfillment-toggle">
+            <label class="fulfillment-opt">
+              <input type="radio" name="fulfillment_type" value="DELIVERY" checked />
+              <span>Entrega Refrigerada no DF</span>
+            </label>
+            <label class="fulfillment-opt">
+              <input type="radio" name="fulfillment_type" value="PICKUP_ATELIER" />
+              <span>Retirada no Atelier (CLS 405 · Grátis)</span>
+            </label>
+          </div>
+
+          <div id="co-address-fields" style="display:flex; flex-direction:column; gap:0.8rem;">
+            <div class="form-grid-3">
+              <div class="field-group">
+                <label for="co-zone">Região Administrativa *</label>
+                <select id="co-zone" name="delivery_zone_slug"></select>
+              </div>
+              <div class="field-group">
+                <label for="co-zip">CEP *</label>
+                <input id="co-zip" name="zip_code" type="text" placeholder="71600-000" />
+              </div>
+              <div class="field-group">
+                <label for="co-district">Bairro / Setor *</label>
+                <input id="co-district" name="district" type="text" placeholder="Lago Sul / Asa Sul" />
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="co-street">Quadra / SHIS / SQS / Logradouro *</label>
+                <input id="co-street" name="street" type="text" placeholder="Ex.: SHIS QI 11 Conjunto 4" />
+              </div>
+              <div class="field-group">
+                <label for="co-number">Casa / Bloco / Apto *</label>
+                <input id="co-number" name="number_text" type="text" placeholder="Ex.: Casa 12 ou Bloco C Apto 302" />
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="field-group">
+                <label for="co-complement">Complemento</label>
+                <input id="co-complement" name="complement" type="text" placeholder="Condomínio, portaria..." />
+              </div>
+              <div class="field-group">
+                <label for="co-reference">Ponto de referência</label>
+                <input id="co-reference" name="reference_note" type="text" placeholder="Próximo ao Pontão / Comércio local" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="co-window">Janela de entrega desejada</label>
+              <select id="co-window" name="delivery_window">
+                <option value="Hoje · Próxima rota refrigerada">Hoje · Próxima rota refrigerada</option>
+                <option value="Hoje · 18h às 20h">Hoje · 18h às 20h</option>
+                <option value="Amanhã · 11h às 13h">Amanhã · 11h às 13h</option>
+                <option value="Amanhã · 15h às 18h">Amanhã · 15h às 18h</option>
+                <option value="Sexta/Sábado manhã (fornada fresca)">Sexta/Sábado manhã (fornada fresca)</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="co-payment">Forma de pagamento</label>
+              <select id="co-payment" name="payment_method">
+                <option value="PIX">PIX (aprovação imediata)</option>
+                <option value="CREDIT_CARD">Cartão de Crédito</option>
+                <option value="BOLETO">Boleto / Faturamento</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="co-notes">Observações de fatiamento, preparo ou entrega</label>
+            <textarea id="co-notes" name="customer_notes" rows="2" placeholder="Ex.: fatiar jamón bem fino, interfonar ao chegar, cartão de presente..."></textarea>
+          </div>
+
+          <div class="checkout-totals-strip">
+            <div>
+              <div id="co-summary-meta" style="font-size:0.78rem; color:var(--ink-secondary);"></div>
+              <div id="co-summary-total" style="font-family:var(--font-serif); font-size:1.55rem;" class="tabular">R$ 0,00</div>
+            </div>
+            <button id="submit-order-btn" class="btn btn--primary" type="submit">Confirmar Pedido</button>
+          </div>
+        </form>
+
+        <!-- Step 2: Order Receipt -->
+        <div id="checkout-receipt" hidden>
+          <p id="receipt-subtitle" style="color: var(--ink-secondary); font-size: 0.92rem; margin-top: 0.65rem;"></p>
+          <div id="order-summary-text" class="order-summary-box"></div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <button id="copy-order-btn" class="btn btn--primary" type="button">Copiar Comprovante</button>
+            <button id="clear-and-close-btn" class="btn btn--secondary" type="button">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Corporate / Embaixadas Inquiry Modal -->
+  <div id="corporate-modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="corp-modal-title">
+    <div class="modal-panel">
+      <button id="close-corporate-modal" class="icon-close modal-close" type="button" aria-label="Fechar solicitação">&times;</button>
+      <div class="checkout-modal-body">
+        <span class="kicker">Concierge Institucional · Brasília</span>
+        <h3 id="corp-modal-title" style="font-size: 1.85rem; margin-top: 0.4rem;">Presentes Corporativos &amp; Embaixadas</h3>
+        <p style="color: var(--ink-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+          Preencha os dados do evento ou homenagem. Nossa equipe de Concierge prepara uma proposta personalizada com caixas em madeira natural e opção de maestro cortador de Jamón ao vivo.
+        </p>
+
+        <form id="corporate-form" class="checkout-form">
+          <div id="corp-error" class="form-error-banner" hidden></div>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="corp-org">Empresa / Embaixada / Órgão *</label>
+              <input id="corp-org" name="organization_name" type="text" required placeholder="Ex.: Embaixada / Escritório" />
+            </div>
+            <div class="field-group">
+              <label for="corp-contact">Responsável pelo contato *</label>
+              <input id="corp-contact" name="contact_name" type="text" required placeholder="Seu nome" />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="field-group">
+              <label for="corp-email">E-mail corporativo *</label>
+              <input id="corp-email" name="email" type="email" required placeholder="nome@instituicao.org" />
+            </div>
+            <div class="field-group">
+              <label for="corp-phone">Telefone / WhatsApp *</label>
+              <input id="corp-phone" name="phone" type="tel" required placeholder="(61) 99999-0000" />
+            </div>
+          </div>
+          <div class="form-grid-3">
+            <div class="field-group">
+              <label for="corp-qty">Quantidade de caixas</label>
+              <input id="corp-qty" name="box_quantity" type="number" min="1" value="10" />
+            </div>
+            <div class="field-group">
+              <label for="corp-date">Data prevista</label>
+              <input id="corp-date" name="event_date" type="date" />
+            </div>
+            <div class="field-group">
+              <label for="corp-regions">Regiões desejadas</label>
+              <input id="corp-regions" name="preferred_regions" type="text" placeholder="Ex.: Andaluzia, La Rioja" />
+            </div>
+          </div>
+          <label class="checkbox-inline">
+            <input id="corp-carver" name="needs_jamon_carver" type="checkbox" />
+            <span>Incluir orçamento de Maestro Cortador de Jamón ao vivo no evento</span>
+          </label>
+          <div class="field-group">
+            <label for="corp-notes">Observações adicionais</label>
+            <textarea id="corp-notes" name="notes" rows="2" placeholder="Perfil dos convidados, personalização de cartões, local no DF..."></textarea>
+          </div>
+          <div>
+            <button id="submit-corp-btn" class="btn btn--primary" type="submit">Enviar Solicitação ao Concierge</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -1,29 +1,20 @@
 /* ==========================================================================
-   O ESPANHOL — Interactive Engine for 17 Spanish Autonomous Communities
-   Interactive SVG Atlas, Dynamic Regional Design Motifs, Search, Sommelier & Cart
+   O ESPANHOL — Storefront Engine (Fase 3: API PHP/MySQL + Fallback Estático)
+   Atlas das 17 Comunidades, Sommelier, Entrega DF, Checkout Real & Corporativo
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  const { MOTIFS, REGIONS, EXTRA_ITEMS } = window.__OESPANHOL_DATA__;
+  const FALLBACK_DATA = window.__OESPANHOL_DATA__ || { MOTIFS: {}, REGIONS: [], EXTRA_ITEMS: {} };
+  const MOTIFS = FALLBACK_DATA.MOTIFS;
 
-  /* Flatten all 56 regional dishes into a fast lookup map with parent region metadata */
-  const DISH_INDEX = {};
-  REGIONS.forEach((region) => {
-    region.dishes.forEach((dish) => {
-      DISH_INDEX[dish.id] = Object.assign({}, dish, {
-        regionId: region.id,
-        regionName: region.name,
-        regionCode: region.code,
-        regionAccent: region.accent,
-        regionAccentSoft: region.accentSoft,
-        regionMotifKey: region.motifKey
-      });
-    });
-  });
+  let REGIONS = FALLBACK_DATA.REGIONS.slice();
+  let EXTRA_ITEMS = Object.assign({}, FALLBACK_DATA.EXTRA_ITEMS);
+  let DISH_INDEX = {};
+  let apiConnected = false;
 
-  const DF_ZONES = [
+  let DF_ZONES = [
     { id: "lago-sul", name: "Lago Sul", eta: "Até 2h30", fee: 24, freeMin: 350, note: "Rota prioritária refrigerada com saída às 11h, 15h e 18h30. Ideal para jantares e recepções à beira-lago." },
     { id: "asa-sul", name: "Asa Sul", eta: "Até 1h45", fee: 16, freeMin: 350, note: "Proximidade imediata do nosso Atelier na CLS 405. Retirada sem taxa disponível no mesmo dia." },
     { id: "asa-norte", name: "Asa Norte", eta: "Até 2h15", fee: 18, freeMin: 350, note: "Entregas climatizadas em todas as superquadras e comerciais da Asa Norte até às 20h." },
@@ -34,83 +25,106 @@
     { id: "aguas-claras", name: "Águas Claras", eta: "Até 3h00", fee: 26, freeMin: 400, note: "Duas janelas diárias refrigeradas (tarde e noite) com controle rigoroso de temperatura." }
   ];
 
-  const SOMMELIER_ROUTES = {
+  let SOMMELIER_ROUTES = {
     sul: {
       title: "Rota do Sul & Dehesa",
       note: "“Uma travessia ensolarada entre Andaluzia e Extremadura: comece com Salmorejo Cordobés e Fino de Jerez, siga para o Jamón 100% Bellota de Jabugo e encerre mergulhando pão rústico na cremosa Torta del Casar.”",
-      build(guests) {
-        const packs = Math.max(1, Math.ceil(guests / 3));
-        return [
-          { productId: "and-jamon-jabugo", qty: packs },
-          { productId: "and-salmorejo", qty: Math.max(1, Math.ceil(guests / 3)) },
-          { productId: "ext-torta-casar", qty: 1 },
-          { productId: "and-atum-jerez", qty: Math.max(1, Math.ceil(guests / 4)) }
-        ];
-      }
+      discountBps: 800,
+      rules: [
+        { sku: "and-jamon-jabugo", per_guests: 3, min_qty: 1 },
+        { sku: "and-salmorejo", per_guests: 3, min_qty: 1 },
+        { sku: "ext-torta-casar", fixed_qty: 1 },
+        { sku: "and-atum-jerez", per_guests: 4, min_qty: 1 }
+      ]
     },
     norte: {
       title: "Rota Atlântica — Norte Verde",
       note: "“O frescor oceânico da Galícia, País Basco e Astúrias: abra com Gildas Donostiarras e Txakoli gelado, sirva o Polvo à Feira sobre tábuas de madeira com Albariño e feche com o Idiazabal defumado.”",
-      build(guests) {
-        return [
-          { productId: "gal-pulpo", qty: Math.max(1, Math.ceil(guests / 3)) },
-          { productId: "eus-gildas", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "eus-idiazabal", qty: 1 },
-          { productId: "gal-albarino", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "ast-sidra", qty: Math.max(1, Math.ceil(guests / 6)) }
-        ];
-      }
+      discountBps: 800,
+      rules: [
+        { sku: "gal-pulpo", per_guests: 3, min_qty: 1 },
+        { sku: "eus-gildas", per_guests: 4, min_qty: 1 },
+        { sku: "eus-idiazabal", fixed_qty: 1 },
+        { sku: "gal-albarino", per_guests: 4, min_qty: 1 },
+        { sku: "ast-sidra", per_guests: 6, min_qty: 1 }
+      ]
     },
     mediterraneo: {
       title: "Rota Mediterrânea & Ilhas",
       note: "“Almoço luminoso do Levante às Baleares: Escalivada catalã e Sobrassada de Mallorca com Cava Brut Nature enquanto a Paella Valenciana descansa por 5 minutos, fechando com Turrón de Jijona.”",
-      build(guests) {
-        return [
-          { productId: "val-kit-paella", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "cat-escalivada", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "bal-sobrassada", qty: 1 },
-          { productId: "cat-cava", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "val-turron", qty: 1 }
-        ];
-      }
+      discountBps: 800,
+      rules: [
+        { sku: "val-kit-paella", per_guests: 4, min_qty: 1 },
+        { sku: "cat-escalivada", per_guests: 4, min_qty: 1 },
+        { sku: "bal-sobrassada", fixed_qty: 1 },
+        { sku: "cat-cava", per_guests: 4, min_qty: 1 },
+        { sku: "val-turron", fixed_qty: 1 }
+      ]
     },
     meseta: {
       title: "Rota da Meseta Real & La Rioja",
       note: "“Clássicos solenes do interior espanhol: Vermute de Madri e azeitonas Campo Real no aperitivo, Queijo Manchego 12 meses, Paleta de Guijuelo e o Rioja Gran Reserva 2016 decantado.”",
-      build(guests) {
-        return [
-          { productId: "rio-gran-reserva", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "clm-manchego", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "cyl-paleta-guijuelo", qty: Math.max(1, Math.ceil(guests / 3)) },
-          { productId: "mad-vermute", qty: 1 },
-          { productId: "rio-patatas", qty: Math.max(1, Math.ceil(guests / 4)) }
-        ];
-      }
+      discountBps: 800,
+      rules: [
+        { sku: "rio-gran-reserva", per_guests: 4, min_qty: 1 },
+        { sku: "clm-manchego", per_guests: 4, min_qty: 1 },
+        { sku: "cyl-paleta-guijuelo", per_guests: 3, min_qty: 1 },
+        { sku: "mad-vermute", fixed_qty: 1 },
+        { sku: "rio-patatas", per_guests: 4, min_qty: 1 }
+      ]
     }
   };
 
   /* State */
   let activeMacro = "todas";
   let activeRegionId = "andaluzia";
-  let viewMode = "region"; // "region" | "all"
+  let viewMode = "region";
   let searchQuery = "";
   let activeOccasion = "sul";
   let guestCount = 4;
   let activeZoneId = "lago-sul";
+  let activeSommelierRouteSlug = null;
   let cart = [{ id: "and-jamon-jabugo", qty: 1 }];
+  let serverQuote = null;
   let toastTimer = null;
 
   /* Helpers */
   const formatBRL = (value) =>
-    value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  const formatCents = (cents) => formatBRL((Number(cents) || 0) / 100);
 
   const normalize = (str) =>
-    str
+    String(str || "")
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-  const findItem = (id) => DISH_INDEX[id] || EXTRA_ITEMS[id] || null;
+  function rebuildDishIndex() {
+    DISH_INDEX = {};
+    REGIONS.forEach((region) => {
+      (region.dishes || []).forEach((dish) => {
+        const sku = dish.sku || dish.id;
+        DISH_INDEX[sku] = Object.assign({}, dish, {
+          id: sku,
+          sku,
+          in_stock: dish.in_stock !== undefined ? dish.in_stock : true,
+          is_made_to_order: dish.is_made_to_order !== undefined ? dish.is_made_to_order : sku === "bal-ensaimada",
+          availability_note:
+            dish.availability_note ||
+            (sku === "bal-ensaimada" ? "Sob encomenda — assada fresca nas manhãs de sexta e sábado" : null),
+          regionId: region.id,
+          regionName: region.name,
+          regionCode: region.code,
+          regionAccent: region.accent,
+          regionAccentSoft: region.accentSoft,
+          regionMotifKey: region.motifKey
+        });
+      });
+    });
+  }
+
+  const findItem = (sku) => DISH_INDEX[sku] || EXTRA_ITEMS[sku] || null;
   const findRegion = (id) => REGIONS.find((r) => r.id === id) || REGIONS[0];
   const findZone = (id) => DF_ZONES.find((z) => z.id === id) || DF_ZONES[0];
 
@@ -125,12 +139,106 @@
     el.textContent = message;
     el.classList.add("is-visible");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("is-visible"), 2800);
+    toastTimer = setTimeout(() => el.classList.remove("is-visible"), 3000);
   }
 
   function applyRegionalTheme(region) {
+    if (!region) return;
     document.documentElement.style.setProperty("--region-accent", region.accent);
     document.documentElement.style.setProperty("--region-accent-soft", region.accentSoft);
+  }
+
+  /* ========================================================================
+     0. Live Backend Hydration (Gracefully falls back to static data)
+     ======================================================================== */
+
+  async function hydrateFromApi() {
+    try {
+      const [regRes, zoneRes] = await Promise.all([
+        fetch("./api/catalog/regions.php", { headers: { Accept: "application/json" } }),
+        fetch("./api/shipping/quote.php", { headers: { Accept: "application/json" } })
+      ]);
+
+      if (!regRes.ok || !zoneRes.ok) return;
+      const regJson = await regRes.json();
+      const zoneJson = await zoneRes.json();
+
+      if (regJson.ok && Array.isArray(regJson.regions) && regJson.regions.length > 0) {
+        REGIONS = regJson.regions;
+        if (regJson.extra_items) {
+          Object.keys(regJson.extra_items).forEach((sku) => {
+            const it = regJson.extra_items[sku];
+            EXTRA_ITEMS[sku] = Object.assign({}, it, {
+              id: sku,
+              regionName: it.item_type === "CLUB_PLAN" ? "Clube La Mesa" : "Curadoria Nacional"
+            });
+          });
+        }
+        if (Array.isArray(regJson.sommelier_routes) && regJson.sommelier_routes.length > 0) {
+          const map = {};
+          regJson.sommelier_routes.forEach((rt) => {
+            map[rt.slug] = {
+              title: rt.title,
+              note: rt.note,
+              discountBps: rt.discount_bps,
+              rules: rt.rules
+            };
+          });
+          SOMMELIER_ROUTES = map;
+        }
+      }
+
+      if (zoneJson.ok && Array.isArray(zoneJson.zones) && zoneJson.zones.length > 0) {
+        DF_ZONES = zoneJson.zones.map((z) => ({
+          id: z.slug,
+          name: z.name,
+          eta: z.eta_label,
+          fee: z.fee_cents / 100,
+          freeMin: z.free_shipping_min_cents / 100,
+          note: z.delivery_note
+        }));
+      }
+
+      apiConnected = true;
+      rebuildDishIndex();
+      renderCatalogArea();
+      renderSommelier();
+      renderZones();
+      await syncServerQuote();
+    } catch {
+      apiConnected = false;
+    }
+  }
+
+  async function syncServerQuote() {
+    if (!apiConnected || cart.length === 0) {
+      serverQuote = null;
+      renderCart();
+      return;
+    }
+    try {
+      const fulfillmentEl = document.querySelector('input[name="fulfillment_type"]:checked');
+      const fulfillmentType = fulfillmentEl ? fulfillmentEl.value : "DELIVERY";
+      const res = await fetch("./api/shipping/quote.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          delivery_zone_slug: activeZoneId,
+          fulfillment_type: fulfillmentType,
+          sommelier_route_slug: activeSommelierRouteSlug,
+          items: cart.map((c) => ({ sku: c.id, qty: c.qty }))
+        })
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.ok && json.quote) {
+          serverQuote = json.quote;
+        }
+      }
+    } catch {
+      serverQuote = null;
+    }
+    renderCart();
   }
 
   /* ========================================================================
@@ -160,11 +268,13 @@
     }).join("");
 
     const active = findRegion(activeRegionId);
-    document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
+    if (active) {
+      document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
+    }
   }
 
   /* ========================================================================
-     2. 17-Community Directory Index
+     2. 17-Community Directory & Dish Card Renderer
      ======================================================================== */
 
   function renderDirectory() {
@@ -183,57 +293,59 @@
                 <span class="region-pill-cap">${r.capital} · ${r.macroLabel}</span>
               </span>
             </span>
-            <span class="region-pill-count">${r.dishes.length} pratos</span>
+            <span class="region-pill-count">${(r.dishes || []).length} pratos</span>
           </button>`;
       })
       .join("");
   }
 
-  /* ========================================================================
-     3. Dish Card Renderer (Shared across Regional Dossier & Full Menu)
-     ======================================================================== */
-
   function renderDishCard(dish, regionAccent) {
+    const sku = dish.sku || dish.id;
+    const item = DISH_INDEX[sku] || dish;
+    const outOfStock = item.in_stock === false;
+    const availHtml = outOfStock
+      ? `<span class="product-availability product-availability--out">Temporariamente esgotado</span>`
+      : item.is_made_to_order && item.availability_note
+        ? `<span class="product-availability">${item.availability_note}</span>`
+        : "";
+
     return `
       <article class="product-card" style="--card-accent:${regionAccent};">
         <div class="product-media">
-          <img src="${dish.img}" alt="${dish.name}" loading="lazy" />
-          <span class="product-dop">${dish.dop}</span>
+          <img src="${item.img}" alt="${item.name}" loading="lazy" />
+          <span class="product-dop">${item.dop}</span>
         </div>
         <div class="product-body">
-          <span class="product-category">${dish.type}</span>
-          <h4 class="product-name">${dish.name}</h4>
-          <p class="product-desc">${dish.shortDesc}</p>
+          <span class="product-category">${item.type}</span>
+          <h4 class="product-name">${item.name}</h4>
+          <p class="product-desc">${item.shortDesc}</p>
+          ${availHtml}
           <div class="product-meta-row">
-            <span class="product-weight">${dish.weight}</span>
-            <span class="product-price">${formatBRL(dish.price)}</span>
+            <span class="product-weight">${item.weight}</span>
+            <span class="product-price">${formatBRL(item.price)}</span>
           </div>
           <div class="product-actions">
-            <button class="btn btn--secondary btn--sm js-open-detail" type="button" data-id="${dish.id}">
+            <button class="btn btn--secondary btn--sm js-open-detail" type="button" data-id="${sku}">
               Notas
             </button>
-            <button class="btn btn--sm js-add-cart" type="button" data-id="${dish.id}"
-                    style="background-color:${regionAccent}; border-color:${regionAccent}; color:#F7F1E8;">
-              + Sacola
+            <button class="btn btn--sm js-add-cart" type="button" data-id="${sku}" ${outOfStock ? "disabled" : ""}
+                    style="background-color:${outOfStock ? "#9C8F87" : regionAccent}; border-color:${outOfStock ? "#9C8F87" : regionAccent}; color:#F7F1E8;">
+              ${outOfStock ? "Esgotado" : "+ Sacola"}
             </button>
           </div>
         </div>
       </article>`;
   }
 
-  /* ========================================================================
-     4. Single-Region Editorial Dossier
-     ======================================================================== */
-
   function renderRegionalDossier() {
     const region = findRegion(activeRegionId);
+    if (!region) return;
     applyRegionalTheme(region);
 
-    const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar;
+    const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar || "";
     const repeatedMotifs = Array.from({ length: 7 }, () => motifSvg).join("");
 
-    const dossier = document.getElementById("regional-dossier");
-    dossier.innerHTML = `
+    document.getElementById("regional-dossier").innerHTML = `
       <div class="regional-frieze">
         <div class="frieze-motifs" aria-hidden="true">${repeatedMotifs}</div>
         <span class="frieze-caption">${region.motifLabel}</span>
@@ -255,7 +367,7 @@
           <p class="dossier-story">${region.story}</p>
 
           <div class="dossier-dops">
-            ${region.dops.map((d) => `<span class="dop-tag">${d}</span>`).join("")}
+            ${(region.dops || []).map((d) => `<span class="dop-tag">${d}</span>`).join("")}
           </div>
 
           <p class="dossier-ritual">${region.ritual}</p>
@@ -275,18 +387,14 @@
       <div class="dossier-dishes-wrap">
         <div class="dossier-dishes-head">
           <h4 class="dossier-dishes-title">Cardápio Tradicional — ${region.name}</h4>
-          <span style="font-size:0.78rem; color:var(--ink-muted);">${region.dishes.length} especialidades selecionadas para entrega em Brasília</span>
+          <span style="font-size:0.78rem; color:var(--ink-muted);">${(region.dishes || []).length} especialidades selecionadas para entrega em Brasília</span>
         </div>
         <div class="product-grid">
-          ${region.dishes.map((d) => renderDishCard(d, region.accent)).join("")}
+          ${(region.dishes || []).map((d) => renderDishCard(d, region.accent)).join("")}
         </div>
       </div>
     `;
   }
-
-  /* ========================================================================
-     5. Full Menu / Live Search View (Across All 17 Regions)
-     ======================================================================== */
 
   function renderFullMenu() {
     const container = document.getElementById("full-menu-container");
@@ -304,7 +412,7 @@
 
         const dishes = regionMatch
           ? region.dishes
-          : region.dishes.filter(
+          : (region.dishes || []).filter(
               (d) =>
                 normalize(d.name).includes(q) ||
                 normalize(d.shortDesc).includes(q) ||
@@ -328,7 +436,7 @@
 
     container.innerHTML = chapters
       .map(({ region, dishes }) => {
-        const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar;
+        const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar || "";
         return `
           <section class="region-chapter" style="--chapter-accent:${region.accent};">
             <div class="region-chapter-head">
@@ -351,7 +459,6 @@
       .join("");
   }
 
-  /* Master Catalog View Sync */
   function renderCatalogArea() {
     const hasSearch = searchQuery.trim().length > 0;
     const showFull = viewMode === "all" || hasSearch;
@@ -367,7 +474,7 @@
       renderFullMenu();
     } else {
       const visible = getFilteredRegions();
-      if (!visible.some((r) => r.id === activeRegionId)) {
+      if (visible.length > 0 && !visible.some((r) => r.id === activeRegionId)) {
         activeRegionId = visible[0].id;
       }
       renderMapPins();
@@ -382,7 +489,7 @@
     document.getElementById("menu-search").value = "";
     viewMode = "region";
     const reg = findRegion(regionId);
-    if (activeMacro !== "todas" && reg.macro !== activeMacro) {
+    if (reg && activeMacro !== "todas" && reg.macro !== activeMacro) {
       activeMacro = "todas";
       syncMacroTabs();
     }
@@ -408,63 +515,64 @@
   }
 
   /* ========================================================================
-     6. Product Tasting Sheet Modal
+     3. Tasting Sheet Modal
      ======================================================================== */
 
-  function openProductModal(productId) {
-    const p = DISH_INDEX[productId];
+  function openProductModal(sku) {
+    const p = DISH_INDEX[sku];
     if (!p) return;
 
-    const modalBody = document.getElementById("product-modal-body");
-    modalBody.innerHTML = `
+    const availBlock = p.availability_note
+      ? `<p class="product-availability" style="margin-top:0.85rem;">${p.availability_note}</p>`
+      : "";
+
+    document.getElementById("product-modal-body").innerHTML = `
       <img class="product-modal-img" src="${p.img}" alt="${p.name}" />
       <div class="product-modal-content">
         <span class="kicker" style="color:${p.regionAccent};">${p.regionName} · ${p.dop}</span>
         <h3 id="modal-product-title" style="font-size: 1.75rem; margin-top: 0.4rem;">${p.name}</h3>
         <p style="color: var(--ink-secondary); font-size: 0.91rem; margin: 0.85rem 0 0;">${p.shortDesc}</p>
-
+        ${availBlock}
         <div class="tasting-specs">
-          <div>
-            <span class="spec-label">Origem Regional</span>
-            <span class="spec-val">${p.origin}</span>
-          </div>
-          <div>
-            <span class="spec-label">Preparo / Maturação</span>
-            <span class="spec-val">${p.aging}</span>
-          </div>
-          <div>
-            <span class="spec-label">Ritual de Serviço</span>
-            <span class="spec-val">${p.serving}</span>
-          </div>
-          <div>
-            <span class="spec-label">Harmonização</span>
-            <span class="spec-val">${p.pairing}</span>
-          </div>
+          <div><span class="spec-label">Origem Regional</span><span class="spec-val">${p.origin || "Espanha"}</span></div>
+          <div><span class="spec-label">Preparo / Maturação</span><span class="spec-val">${p.aging || "Artesanal"}</span></div>
+          <div><span class="spec-label">Ritual de Serviço</span><span class="spec-val">${p.serving || "Temperatura ambiente"}</span></div>
+          <div><span class="spec-label">Harmonização</span><span class="spec-val">${p.pairing || "Vinhos ibéricos"}</span></div>
         </div>
-
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
           <div>
             <div style="font-size: 0.74rem; color: var(--ink-muted);">${p.weight}</div>
             <div style="font-family: var(--font-serif); font-size: 1.6rem;" class="tabular">${formatBRL(p.price)}</div>
           </div>
-          <button class="btn js-modal-add" type="button" data-id="${p.id}"
+          <button class="btn js-modal-add" type="button" data-id="${p.sku}" ${p.in_stock === false ? "disabled" : ""}
                   style="background-color:${p.regionAccent}; border-color:${p.regionAccent}; color:#F7F1E8;">
-            Adicionar à Sacola
+            ${p.in_stock === false ? "Esgotado" : "Adicionar à Sacola"}
           </button>
         </div>
       </div>
     `;
-
     openModal("product-modal");
   }
 
   /* ========================================================================
-     7. Regional Sommelier Pairing Studio
+     4. Sommelier Routes
      ======================================================================== */
+
+  function buildRouteSelection(routeKey, guests) {
+    const cfg = SOMMELIER_ROUTES[routeKey];
+    if (!cfg || !Array.isArray(cfg.rules)) return [];
+    return cfg.rules.map((rule) => {
+      const qty = rule.fixed_qty
+        ? Number(rule.fixed_qty)
+        : Math.max(Number(rule.min_qty || 1), Math.ceil(guests / Number(rule.per_guests || 4)));
+      return { productId: rule.sku, qty };
+    });
+  }
 
   function renderSommelier() {
     const cfg = SOMMELIER_ROUTES[activeOccasion];
-    const selection = cfg.build(guestCount);
+    if (!cfg) return;
+    const selection = buildRouteSelection(activeOccasion, guestCount);
 
     document.getElementById("guest-readout").textContent = `${guestCount} pessoas`;
     document.getElementById("pairing-title").textContent = cfg.title;
@@ -472,11 +580,10 @@
     document.getElementById("pairing-note").textContent = cfg.note;
 
     let rawTotal = 0;
-    const listEl = document.getElementById("pairing-list");
-
-    listEl.innerHTML = selection
+    document.getElementById("pairing-list").innerHTML = selection
       .map(({ productId, qty }) => {
         const p = findItem(productId);
+        if (!p) return "";
         const lineTotal = p.price * qty;
         rawTotal += lineTotal;
         return `
@@ -490,38 +597,37 @@
       })
       .join("");
 
-    const discounted = Math.round(rawTotal * 0.92);
+    const discountFactor = 1 - (Number(cfg.discountBps || 800) / 10000);
+    const discounted = Math.round(rawTotal * discountFactor);
     const saving = rawTotal - discounted;
 
     document.getElementById("pairing-original").textContent = formatBRL(rawTotal);
     document.getElementById("pairing-total").textContent = formatBRL(discounted);
-    document.getElementById("pairing-saving").textContent = `Inclui 8% de cortesia na rota completa (economia de ${formatBRL(saving)})`;
+    document.getElementById("pairing-saving").textContent =
+      `Inclui ${(cfg.discountBps || 800) / 100}% de cortesia na rota completa (economia de ${formatBRL(saving)})`;
   }
 
   /* ========================================================================
-     8. DF Delivery Zone Checker
+     5. DF Delivery Zones & Cart
      ======================================================================== */
 
   function renderZones() {
-    const btnWrap = document.getElementById("zone-buttons");
-    const cartSelect = document.getElementById("cart-zone-select");
-
-    btnWrap.innerHTML = DF_ZONES.map(
-      (z) => `
-      <button class="zone-btn ${z.id === activeZoneId ? "is-active" : ""}" type="button" data-zone="${z.id}">
-        ${z.name}
-      </button>`
+    document.getElementById("zone-buttons").innerHTML = DF_ZONES.map(
+      (z) => `<button class="zone-btn ${z.id === activeZoneId ? "is-active" : ""}" type="button" data-zone="${z.id}">${z.name}</button>`
     ).join("");
 
-    cartSelect.innerHTML = DF_ZONES.map(
+    const optionsHtml = DF_ZONES.map(
       (z) => `<option value="${z.id}" ${z.id === activeZoneId ? "selected" : ""}>${z.name}</option>`
     ).join("");
 
+    document.getElementById("cart-zone-select").innerHTML = optionsHtml;
+    document.getElementById("co-zone").innerHTML = optionsHtml;
     updateZoneDisplay();
   }
 
   function updateZoneDisplay() {
     const z = findZone(activeZoneId);
+    if (!z) return;
     document.getElementById("delivery-zone-name").textContent = z.name;
     document.getElementById("delivery-eta").textContent = z.eta;
     document.getElementById("delivery-fee").textContent = formatBRL(z.fee);
@@ -531,70 +637,85 @@
     document.querySelectorAll(".zone-btn").forEach((b) => {
       b.classList.toggle("is-active", b.dataset.zone === activeZoneId);
     });
-    const cartSelect = document.getElementById("cart-zone-select");
-    if (cartSelect) cartSelect.value = activeZoneId;
+    document.getElementById("cart-zone-select").value = activeZoneId;
+    document.getElementById("co-zone").value = activeZoneId;
   }
 
-  /* ========================================================================
-     9. Cart Drawer Logic
-     ======================================================================== */
-
-  function addToCart(id, qty = 1, silent = false) {
-    const item = findItem(id);
-    if (!item) return;
-    const existing = cart.find((c) => c.id === id);
+  function addToCart(sku, qty = 1, silent = false) {
+    const item = findItem(sku);
+    if (!item || item.in_stock === false) {
+      showToast("Item temporariamente indisponível em estoque.");
+      return;
+    }
+    const existing = cart.find((c) => c.id === sku);
     if (existing) {
       existing.qty += qty;
     } else {
-      cart.push({ id, qty });
+      cart.push({ id: sku, qty });
     }
-    renderCart();
+    syncServerQuote();
     if (!silent) {
       showToast(`Adicionado (${item.regionName}): ${item.name}`);
     }
   }
 
-  function updateCartQty(id, delta) {
-    const idx = cart.findIndex((c) => c.id === id);
+  function updateCartQty(sku, delta) {
+    const idx = cart.findIndex((c) => c.id === sku);
     if (idx === -1) return;
     cart[idx].qty += delta;
-    if (cart[idx].qty <= 0) {
-      cart.splice(idx, 1);
-    }
-    renderCart();
+    if (cart[idx].qty <= 0) cart.splice(idx, 1);
+    syncServerQuote();
   }
 
-  function removeFromCart(id) {
-    cart = cart.filter((c) => c.id !== id);
-    renderCart();
+  function removeFromCart(sku) {
+    cart = cart.filter((c) => c.id !== sku);
+    syncServerQuote();
   }
 
   function computeCartTotals() {
     const zone = findZone(activeZoneId);
+    let totalCount = cart.reduce((acc, c) => acc + c.qty, 0);
+
+    if (serverQuote && cart.length > 0) {
+      return {
+        subtotal: serverQuote.subtotal_cents / 100,
+        discount: serverQuote.discount_cents / 100,
+        shipping: serverQuote.shipping_cents / 100,
+        total: serverQuote.total_cents / 100,
+        freeMin: serverQuote.shipping.free_shipping_min_cents / 100,
+        remainingForFree: serverQuote.shipping.remaining_for_free_cents / 100,
+        totalCount,
+        zone
+      };
+    }
+
     let subtotal = 0;
-    let totalCount = 0;
     cart.forEach((entry) => {
       const p = findItem(entry.id);
-      if (p) {
-        subtotal += p.price * entry.qty;
-        totalCount += entry.qty;
-      }
+      if (p) subtotal += p.price * entry.qty;
     });
-    const isFree = subtotal >= zone.freeMin || subtotal === 0;
-    const shipping = subtotal === 0 ? 0 : isFree ? 0 : zone.fee;
+
+    const fulfillmentEl = document.querySelector('input[name="fulfillment_type"]:checked');
+    const isPickup = fulfillmentEl && fulfillmentEl.value === "PICKUP_ATELIER";
+    const discount = 0;
+    const afterDiscount = subtotal - discount;
+    const isFree = isPickup || afterDiscount >= zone.freeMin || subtotal === 0;
+    const shipping = subtotal === 0 || isFree ? 0 : zone.fee;
+
     return {
       subtotal,
-      totalCount,
+      discount,
       shipping,
-      total: subtotal + shipping,
+      total: afterDiscount + shipping,
       freeMin: zone.freeMin,
-      remainingForFree: Math.max(0, zone.freeMin - subtotal),
+      remainingForFree: isPickup ? 0 : Math.max(0, zone.freeMin - afterDiscount),
+      totalCount,
       zone
     };
   }
 
   function renderCart() {
-    const { subtotal, totalCount, shipping, total, freeMin, remainingForFree, zone } =
+    const { subtotal, discount, shipping, total, freeMin, remainingForFree, totalCount, zone } =
       computeCartTotals();
 
     document.getElementById("cart-count").textContent = totalCount;
@@ -624,6 +745,7 @@
       container.innerHTML = cart
         .map((entry) => {
           const p = findItem(entry.id);
+          if (!p) return "";
           return `
             <div class="cart-item">
               <img src="${p.img}" alt="${p.name}" />
@@ -648,13 +770,220 @@
     }
 
     document.getElementById("cart-subtotal").textContent = formatBRL(subtotal);
+    const discRow = document.getElementById("cart-discount-row");
+    discRow.hidden = discount <= 0;
+    document.getElementById("cart-discount").textContent = `-${formatBRL(discount)}`;
     document.getElementById("cart-shipping").textContent =
       subtotal === 0 ? "—" : shipping === 0 ? "Cortesia" : formatBRL(shipping);
     document.getElementById("cart-total").textContent = formatBRL(total);
+
+    // Sync totals inside checkout modal strip
+    const metaEl = document.getElementById("co-summary-meta");
+    const totEl = document.getElementById("co-summary-total");
+    if (metaEl && totEl) {
+      metaEl.textContent = `${totalCount} item(ns) · ${shipping === 0 ? "Frete cortesia / retirada" : "Frete " + formatBRL(shipping)}`;
+      totEl.textContent = formatBRL(total);
+    }
   }
 
   /* ========================================================================
-     10. Drawers, Modals & Checkout Summary
+     6. Real Checkout & Corporate Inquiry Submissions
+     ======================================================================== */
+
+  function openCheckoutModal() {
+    if (cart.length === 0) {
+      showToast("Adicione ao menos um item à sacola para continuar.");
+      return;
+    }
+    document.getElementById("checkout-form").hidden = false;
+    document.getElementById("checkout-receipt").hidden = true;
+    document.getElementById("checkout-error").hidden = true;
+    document.getElementById("checkout-api-badge").textContent = apiConnected
+      ? "Servidor MySQL Conectado"
+      : "Modo Demonstração Local";
+    syncServerQuote();
+    openModal("checkout-modal");
+  }
+
+  async function handleCheckoutSubmit(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const errEl = document.getElementById("checkout-error");
+    const submitBtn = document.getElementById("submit-order-btn");
+    errEl.hidden = true;
+
+    const fd = new FormData(form);
+    const fulfillmentType = String(fd.get("fulfillment_type") || "DELIVERY");
+    const payload = {
+      fulfillment_type: fulfillmentType,
+      delivery_zone_slug: String(fd.get("delivery_zone_slug") || activeZoneId),
+      delivery_window: String(fd.get("delivery_window") || ""),
+      payment_method: String(fd.get("payment_method") || "PIX"),
+      sommelier_route_slug: activeSommelierRouteSlug,
+      customer_notes: String(fd.get("customer_notes") || ""),
+      customer: {
+        full_name: String(fd.get("full_name") || ""),
+        email: String(fd.get("email") || ""),
+        phone: String(fd.get("phone") || ""),
+        cpf: String(fd.get("cpf") || "")
+      },
+      address:
+        fulfillmentType === "DELIVERY"
+          ? {
+              zip_code: String(fd.get("zip_code") || ""),
+              street: String(fd.get("street") || ""),
+              number_text: String(fd.get("number_text") || ""),
+              complement: String(fd.get("complement") || ""),
+              district: String(fd.get("district") || ""),
+              city: "Brasília",
+              state_uf: "DF",
+              reference_note: String(fd.get("reference_note") || "")
+            }
+          : null,
+      items: cart.map((c) => ({ sku: c.id, qty: c.qty }))
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Processando...";
+
+    try {
+      if (apiConnected) {
+        const res = await fetch("./api/orders/create.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || "Não foi possível concluir o pedido.");
+        }
+        renderServerReceipt(json.order, payload.customer.full_name);
+      } else {
+        // Fallback em hospedagem puramente estática (ex.: GitHub Pages sem PHP)
+        renderStaticDemoReceipt(payload);
+      }
+
+      cart = [];
+      activeSommelierRouteSlug = null;
+      serverQuote = null;
+      renderCart();
+      form.reset();
+    } catch (err) {
+      errEl.textContent = err.message || "Erro ao enviar pedido.";
+      errEl.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Confirmar Pedido";
+    }
+  }
+
+  function renderServerReceipt(order, customerName) {
+    const lines = [
+      `PEDIDO CONFIRMADO — ${order.order_code}`,
+      "O ESPANHOL · Empório Ibérico Gourmet (Brasília, DF)",
+      "----------------------------------------------------",
+      `Cliente: ${customerName}`,
+      `Status: ${order.status}`,
+      `Modalidade: ${order.fulfillment_type === "PICKUP_ATELIER" ? "Retirada CLS 405 (Asa Sul)" : order.zone_name + " (" + order.eta_label + ")"}`,
+      `Janela: ${order.delivery_window}`,
+      "----------------------------------------------------",
+      ...order.items.map(
+        (it) => `• ${it.quantity}x ${it.name} [${it.region_name}] — ${formatCents(it.line_total_cents)}`
+      ),
+      "----------------------------------------------------",
+      `Subtotal: ${formatCents(order.subtotal_cents)}`,
+      order.discount_cents > 0 ? `Cortesia Sommelier (${order.applied_route}): -${formatCents(order.discount_cents)}` : null,
+      `Entrega refrigerada: ${order.shipping_cents === 0 ? "Cortesia" : formatCents(order.shipping_cents)}`,
+      `TOTAL: ${formatCents(order.total_cents)}`,
+      "----------------------------------------------------",
+      `Pagamento (${order.payment.method}): ${order.payment.provider_reference}`
+    ].filter(Boolean);
+
+    document.getElementById("checkout-form").hidden = true;
+    document.getElementById("checkout-receipt").hidden = false;
+    document.getElementById("receipt-subtitle").textContent =
+      `Pedido ${order.order_code} gravado no banco de dados com estoque reservado!`;
+    document.getElementById("order-summary-text").textContent = lines.join("\n");
+    showToast(`Pedido ${order.order_code} registrado com sucesso!`);
+  }
+
+  function renderStaticDemoReceipt(payload) {
+    const { subtotal, shipping, total, zone } = computeCartTotals();
+    const lines = [
+      "RESUMO DE PEDIDO (MODO ESTÁTICO) — O ESPANHOL",
+      "----------------------------------------------------",
+      `Cliente: ${payload.customer.full_name} (${payload.customer.phone})`,
+      payload.fulfillment_type === "DELIVERY"
+        ? `Entrega: ${payload.address.street}, ${payload.address.number_text} — ${zone.name} (CEP ${payload.address.zip_code})`
+        : "Modalidade: Retirada no Atelier CLS 405 (Asa Sul)",
+      `Janela: ${payload.delivery_window} | Pagamento: ${payload.payment_method}`,
+      "----------------------------------------------------",
+      ...cart.map((c) => {
+        const p = findItem(c.id);
+        return `• ${c.qty}x ${p.name} [${p.regionName}] — ${formatBRL(p.price * c.qty)}`;
+      }),
+      "----------------------------------------------------",
+      `Subtotal: ${formatBRL(subtotal)} | Frete: ${shipping === 0 ? "Cortesia" : formatBRL(shipping)} | TOTAL: ${formatBRL(total)}`
+    ];
+
+    document.getElementById("checkout-form").hidden = true;
+    document.getElementById("checkout-receipt").hidden = false;
+    document.getElementById("receipt-subtitle").textContent =
+      "Ambiente sem backend PHP ativo — resumo gerado localmente para envio ao Concierge.";
+    document.getElementById("order-summary-text").textContent = lines.join("\n");
+  }
+
+  async function handleCorporateSubmit(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const errEl = document.getElementById("corp-error");
+    const btn = document.getElementById("submit-corp-btn");
+    errEl.hidden = true;
+
+    const fd = new FormData(form);
+    const payload = {
+      organization_name: String(fd.get("organization_name") || ""),
+      contact_name: String(fd.get("contact_name") || ""),
+      email: String(fd.get("email") || ""),
+      phone: String(fd.get("phone") || ""),
+      box_quantity: Number(fd.get("box_quantity") || 6),
+      event_date: String(fd.get("event_date") || "") || null,
+      preferred_regions: String(fd.get("preferred_regions") || ""),
+      needs_jamon_carver: fd.get("needs_jamon_carver") === "on",
+      notes: String(fd.get("notes") || "")
+    };
+
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+
+    try {
+      if (apiConnected) {
+        const res = await fetch("./api/inquiries/corporate.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok || !json.ok) {
+          throw new Error(json.error || "Não foi possível registrar sua solicitação.");
+        }
+        showToast(`Solicitação #${json.inquiry_id} registrada para o Concierge!`);
+      } else {
+        showToast("Solicitação preparada (ative o backend PHP/MySQL na KingHost para persistir).");
+      }
+      form.reset();
+      closeAllModals();
+    } catch (err) {
+      errEl.textContent = err.message || "Erro ao enviar solicitação.";
+      errEl.hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Enviar Solicitação ao Concierge";
+    }
+  }
+
+  /* ========================================================================
+     7. Drawers, Modals & Event Bindings
      ======================================================================== */
 
   function openCart() {
@@ -690,31 +1019,7 @@
     }
   }
 
-  function buildOrderSummary() {
-    const { subtotal, shipping, total, zone } = computeCartTotals();
-    const lines = [
-      "PEDIDO — O ESPANHOL (oespanhol.com.br)",
-      "Atlas Gastronômico das 17 Comunidades · Brasília, DF",
-      "----------------------------------------",
-      ...cart.map((entry) => {
-        const p = findItem(entry.id);
-        return `• ${entry.qty}x ${p.name} [${p.regionName}] — ${formatBRL(p.price * entry.qty)}`;
-      }),
-      "----------------------------------------",
-      `Região de entrega: ${zone.name} (${zone.eta})`,
-      `Subtotal: ${formatBRL(subtotal)}`,
-      `Entrega refrigerada: ${shipping === 0 ? "Cortesia" : formatBRL(shipping)}`,
-      `TOTAL: ${formatBRL(total)}`
-    ];
-    return lines.join("\n");
-  }
-
-  /* ========================================================================
-     11. Event Bindings
-     ======================================================================== */
-
   function bindEvents() {
-    // Macro-region tabs
     document.getElementById("macro-tabs").addEventListener("click", (e) => {
       const btn = e.target.closest(".macro-tab");
       if (!btn) return;
@@ -723,7 +1028,6 @@
       renderCatalogArea();
     });
 
-    // Footer macro shortcuts
     document.querySelectorAll(".js-footer-macro").forEach((link) => {
       link.addEventListener("click", () => {
         activeMacro = link.dataset.macro;
@@ -735,13 +1039,11 @@
       });
     });
 
-    // Search input
     document.getElementById("menu-search").addEventListener("input", (e) => {
       searchQuery = e.target.value;
       renderCatalogArea();
     });
 
-    // View mode switch
     document.getElementById("view-by-region-btn").addEventListener("click", () => {
       viewMode = "region";
       searchQuery = "";
@@ -754,12 +1056,10 @@
       renderCatalogArea();
     });
 
-    // SVG Map pins click & hover
     const pinsLayer = document.getElementById("atlas-map-pins");
     pinsLayer.addEventListener("click", (e) => {
       const pin = e.target.closest(".map-pin");
-      if (!pin) return;
-      selectRegion(pin.dataset.regionId, true);
+      if (pin) selectRegion(pin.dataset.regionId, true);
     });
     pinsLayer.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
@@ -774,46 +1074,27 @@
       const pin = e.target.closest(".map-pin");
       if (!pin) return;
       const r = findRegion(pin.dataset.regionId);
-      document.getElementById("map-hover-readout").textContent = `${r.code} · ${r.name} (${r.capital})`;
+      if (r) document.getElementById("map-hover-readout").textContent = `${r.code} · ${r.name} (${r.capital})`;
     });
     pinsLayer.addEventListener("mouseleave", () => {
       const active = findRegion(activeRegionId);
-      document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
+      if (active) document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
     });
 
-    // 17-Community directory clicks
     document.getElementById("region-directory").addEventListener("click", (e) => {
       const btn = e.target.closest(".region-pill");
-      if (!btn) return;
-      selectRegion(btn.dataset.regionId, false);
+      if (btn) selectRegion(btn.dataset.regionId, false);
     });
 
-    // Delegated clicks inside Dossier & Full Menu (add to cart, tasting notes, prev/next, focus region, clear search)
-    const curadoriaSection = document.getElementById("curadoria");
-    curadoriaSection.addEventListener("click", (e) => {
+    document.getElementById("curadoria").addEventListener("click", (e) => {
       const addBtn = e.target.closest(".js-add-cart");
-      if (addBtn) {
-        addToCart(addBtn.dataset.id);
-        return;
-      }
+      if (addBtn) return addToCart(addBtn.dataset.id);
       const detailBtn = e.target.closest(".js-open-detail");
-      if (detailBtn) {
-        openProductModal(detailBtn.dataset.id);
-        return;
-      }
-      if (e.target.closest("#prev-region-btn")) {
-        stepRegion(-1);
-        return;
-      }
-      if (e.target.closest("#next-region-btn")) {
-        stepRegion(1);
-        return;
-      }
+      if (detailBtn) return openProductModal(detailBtn.dataset.id);
+      if (e.target.closest("#prev-region-btn")) return stepRegion(-1);
+      if (e.target.closest("#next-region-btn")) return stepRegion(1);
       const focusBtn = e.target.closest(".js-focus-region");
-      if (focusBtn) {
-        selectRegion(focusBtn.dataset.regionId, true);
-        return;
-      }
+      if (focusBtn) return selectRegion(focusBtn.dataset.regionId, true);
       if (e.target.closest("#clear-search-btn")) {
         searchQuery = "";
         document.getElementById("menu-search").value = "";
@@ -821,7 +1102,6 @@
       }
     });
 
-    // Product modal add
     document.getElementById("product-modal-body").addEventListener("click", (e) => {
       const btn = e.target.closest(".js-modal-add");
       if (!btn) return;
@@ -830,7 +1110,6 @@
       openCart();
     });
 
-    // Sommelier routes
     document.getElementById("occasion-grid").addEventListener("click", (e) => {
       const btn = e.target.closest(".occasion-btn");
       if (!btn) return;
@@ -847,13 +1126,13 @@
     });
 
     document.getElementById("add-pairing-btn").addEventListener("click", () => {
-      const selection = SOMMELIER_ROUTES[activeOccasion].build(guestCount);
+      const selection = buildRouteSelection(activeOccasion, guestCount);
+      activeSommelierRouteSlug = activeOccasion;
       selection.forEach(({ productId, qty }) => addToCart(productId, qty, true));
-      showToast(`Rota "${SOMMELIER_ROUTES[activeOccasion].title}" adicionada à sacola!`);
+      showToast(`Rota "${SOMMELIER_ROUTES[activeOccasion].title}" adicionada (cortesia 8% aplicada)!`);
       openCart();
     });
 
-    // Club plans & corporate
     document.querySelectorAll(".club-add-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         addToCart(btn.dataset.planId);
@@ -862,36 +1141,38 @@
     });
 
     document.getElementById("corporate-inquiry-btn").addEventListener("click", () => {
-      document.getElementById("order-summary-text").textContent = [
-        "SOLICITAÇÃO CONCIERGE CORPORATIVO — O ESPANHOL",
-        "----------------------------------------",
-        "Interesse: Caixas Presente Temáticas por Comunidade Autônoma / Eventos em Brasília",
-        "Serviços disponíveis:",
-        "• Caixas em madeira natural (a partir de 6 unidades)",
-        "• Cartão em papel algodão com motivo regional impresso",
-        "• Maestro cortador de Jamón ao vivo sob reserva no Lago Sul",
-        "",
-        "Contato Concierge: contato@oespanhol.com.br | (61) 99900-1928"
-      ].join("\n");
-      openModal("checkout-modal");
+      document.getElementById("corp-error").hidden = true;
+      openModal("corporate-modal");
     });
 
-    // Delivery zones
     document.getElementById("zone-buttons").addEventListener("click", (e) => {
       const btn = e.target.closest(".zone-btn");
       if (!btn) return;
       activeZoneId = btn.dataset.zone;
       updateZoneDisplay();
-      renderCart();
+      syncServerQuote();
     });
 
     document.getElementById("cart-zone-select").addEventListener("change", (e) => {
       activeZoneId = e.target.value;
       updateZoneDisplay();
-      renderCart();
+      syncServerQuote();
     });
 
-    // Cart drawer
+    document.getElementById("co-zone").addEventListener("change", (e) => {
+      activeZoneId = e.target.value;
+      updateZoneDisplay();
+      syncServerQuote();
+    });
+
+    document.querySelectorAll('input[name="fulfillment_type"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        const isDelivery = radio.value === "DELIVERY" && radio.checked;
+        document.getElementById("co-address-fields").style.display = isDelivery ? "flex" : "none";
+        syncServerQuote();
+      });
+    });
+
     document.getElementById("open-cart-btn").addEventListener("click", openCart);
     document.getElementById("close-cart-btn").addEventListener("click", closeCart);
     document.getElementById("overlay").addEventListener("click", () => {
@@ -913,36 +1194,21 @@
       }
     });
 
-    // Checkout flow
-    document.getElementById("checkout-btn").addEventListener("click", () => {
-      if (cart.length === 0) {
-        showToast("Adicione ao menos um item à sacola para continuar.");
-        return;
-      }
-      document.getElementById("order-summary-text").textContent = buildOrderSummary();
-      openModal("checkout-modal");
-    });
+    document.getElementById("checkout-btn").addEventListener("click", openCheckoutModal);
+    document.getElementById("checkout-form").addEventListener("submit", handleCheckoutSubmit);
+    document.getElementById("corporate-form").addEventListener("submit", handleCorporateSubmit);
 
     document.getElementById("copy-order-btn").addEventListener("click", () => {
       const text = document.getElementById("order-summary-text").textContent;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast("Resumo copiado! Pronto para enviar ao Concierge.");
-        });
-      } else {
-        showToast("Resumo pronto — selecione e copie o texto acima.");
+        navigator.clipboard.writeText(text).then(() => showToast("Comprovante copiado!"));
       }
     });
 
-    document.getElementById("clear-and-close-btn").addEventListener("click", () => {
-      cart = [];
-      renderCart();
-      closeAllModals();
-      showToast("Pedido registrado no modo demonstrativo. ¡Muchas gracias!");
-    });
-
+    document.getElementById("clear-and-close-btn").addEventListener("click", closeAllModals);
     document.getElementById("close-product-modal").addEventListener("click", closeAllModals);
     document.getElementById("close-checkout-modal").addEventListener("click", closeAllModals);
+    document.getElementById("close-corporate-modal").addEventListener("click", closeAllModals);
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closeCart();
@@ -950,7 +1216,6 @@
       }
     });
 
-    // Mobile nav
     const menuBtn = document.getElementById("mobile-menu-btn");
     const mobileNav = document.getElementById("mobile-nav");
     menuBtn.addEventListener("click", () => {
@@ -986,10 +1251,12 @@
   }
 
   /* Boot */
+  rebuildDishIndex();
   renderCatalogArea();
   renderSommelier();
   renderZones();
   renderCart();
   bindEvents();
   initScrollReveal();
+  hydrateFromApi();
 })();

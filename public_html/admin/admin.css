@@ -1,0 +1,395 @@
+/* ==========================================================================
+   O ESPANHOL — Backoffice Operacional (RBAC)
+   ========================================================================== */
+
+:root {
+  --bg: #FAF6F0;
+  --surface: #FFFDF9;
+  --linen: #F2EAE0;
+  --deep: #211613;
+  --ink: #1F1714;
+  --muted: #6C5D55;
+  --wine: #6B1D2B;
+  --wine-hover: #531520;
+  --terracotta: #B55038;
+  --olive: #4E6138;
+  --gold: #C6A46C;
+  --hairline: rgba(31, 23, 20, 0.12);
+  --hairline-strong: rgba(31, 23, 20, 0.24);
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; margin: 0; }
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Login View */
+.login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-top: 3px solid var(--wine);
+  padding: 2.2rem 2rem;
+  box-shadow: 0 24px 60px -28px rgba(31, 23, 20, 0.2);
+}
+
+.login-kicker {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+
+.login-card h1 {
+  font-size: 1.85rem;
+  margin: 0.35rem 0 0.45rem;
+}
+
+.login-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 1.45rem;
+}
+
+/* Header & Nav */
+.admin-header {
+  background: var(--deep);
+  color: #F7F1E8;
+  padding: 0.9rem 1.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.admin-brand strong {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.admin-brand span {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.admin-user-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+}
+
+.role-badge {
+  background: rgba(198, 164, 108, 0.2);
+  color: var(--gold);
+  border: 1px solid rgba(198, 164, 108, 0.45);
+  padding: 0.22rem 0.58rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.admin-tabs {
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  padding: 0 1.75rem;
+  display: flex;
+  gap: 0.35rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-tab {
+  background: transparent;
+  border: 0;
+  padding: 0.9rem 0;
+  font-size: 0.76rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+}
+
+.admin-tab.is-active {
+  color: var(--wine);
+  border-bottom-color: var(--wine);
+  font-weight: 600;
+}
+
+.admin-main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.75rem;
+}
+
+/* Forms & Buttons */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.9rem;
+}
+
+.field label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input, .field select, .field textarea {
+  padding: 0.56rem 0.75rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--surface);
+  border-radius: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.58rem 1.05rem;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.btn--primary { background: var(--wine); color: #F7F1E8; }
+.btn--primary:hover { background: var(--wine-hover); }
+.btn--secondary { background: var(--surface); border-color: var(--hairline-strong); color: var(--ink); }
+.btn--secondary:hover { background: var(--linen); }
+.btn--danger { background: #8E2525; color: #FFF; }
+.btn--ghost-light { background: transparent; border-color: rgba(247, 241, 232, 0.35); color: #F7F1E8; }
+.btn--sm { padding: 0.4rem 0.72rem; font-size: 0.68rem; }
+
+.alert-error {
+  padding: 0.68rem 0.85rem;
+  background: rgba(154, 43, 43, 0.09);
+  border-left: 3px solid #9A2B2B;
+  color: #7A1E1E;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+/* Panel Toolbar & Cards */
+.panel-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.filters-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filters-row input, .filters-row select {
+  padding: 0.48rem 0.7rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--surface);
+  border-radius: 2px;
+}
+
+.orders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 1.15rem;
+}
+
+.order-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.order-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.order-code {
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
+}
+
+.status-pill {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.55rem;
+  border-radius: 2px;
+  background: var(--linen);
+  color: var(--ink);
+}
+
+.status-pill--PAGO { background: rgba(78, 97, 56, 0.16); color: #364B21; }
+.status-pill--EM_PREPARO { background: rgba(181, 80, 56, 0.16); color: #8D3520; }
+.status-pill--PRONTO_EXPEDICAO { background: rgba(51, 92, 117, 0.16); color: #20455B; }
+.status-pill--SAIU_PARA_ENTREGA { background: rgba(174, 106, 34, 0.18); color: #7C4710; }
+.status-pill--ENTREGUE { background: rgba(44, 84, 68, 0.18); color: #1E4234; }
+.status-pill--CANCELADO, .status-pill--ESTORNADO { background: rgba(142, 37, 37, 0.14); color: #7A1E1E; }
+
+.order-items-mini {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.83rem;
+}
+
+.order-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--hairline);
+}
+
+/* Tables & KPIs */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 1.25rem;
+}
+
+.kpi-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--muted);
+}
+
+.kpi-value {
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  margin-top: 0.3rem;
+}
+
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.72rem 0.9rem;
+  border-bottom: 1px solid var(--hairline);
+  vertical-align: middle;
+}
+
+th {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--linen);
+}
+
+.inline-input {
+  width: 92px;
+  padding: 0.32rem 0.48rem;
+  border: 1px solid var(--hairline-strong);
+  background: var(--bg);
+}
+
+.staff-form-box {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.staff-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  background: var(--deep);
+  color: #F7F1E8;
+  padding: 0.72rem 1.25rem;
+  font-size: 0.82rem;
+  border-radius: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 900;
+}
+
+.toast.is-visible { opacity: 1; }

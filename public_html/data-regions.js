@@ -1,6 +1,6 @@
 /* ==========================================================================
    O ESPANHOL — Atlas Gastronômico das 17 Comunidades Autônomas da Espanha
-   60 pratos e iguarias tradicionais com elementos visuais e culturais regionais
+   56 pratos regionais + 3 itens extras (59 itens) com elementos visuais regionais
    ========================================================================== */
 
 (function () {

@@ -2293,3 +2293,164 @@ h4 {
     height: 68px;
   }
 }
+
+/* ==========================================================================
+   Fase 3 — Checkout DF, Solicitação Corporativa & Badges de Disponibilidade
+   ========================================================================== */
+
+.product-availability {
+  display: inline-block;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  padding: 0.3rem 0.55rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-linen);
+  color: var(--ink-secondary);
+  border-left: 2px solid var(--terracotta);
+}
+
+.product-availability--out {
+  border-left-color: #9A2B2B;
+  color: #7D1F1F;
+  background-color: rgba(154, 43, 43, 0.08);
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  margin-top: 1.25rem;
+}
+
+.form-section-title {
+  font-family: var(--font-serif);
+  font-size: 1.08rem;
+  color: var(--ink-primary);
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--hairline);
+  margin: 0.35rem 0 0;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+}
+
+.field-group label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.62rem 0.8rem;
+  font-size: 0.88rem;
+  color: var(--ink-primary);
+  transition: border-color var(--transition);
+}
+
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  border-color: var(--wine);
+  outline: none;
+}
+
+.fulfillment-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.fulfillment-opt {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.72rem 0.9rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.fulfillment-opt input {
+  accent-color: var(--wine);
+  width: auto;
+}
+
+.checkbox-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.84rem;
+  color: var(--ink-secondary);
+  cursor: pointer;
+}
+
+.checkbox-inline input {
+  accent-color: var(--wine);
+  width: 16px;
+  height: 16px;
+}
+
+.form-error-banner {
+  padding: 0.75rem 0.95rem;
+  background-color: rgba(154, 43, 43, 0.09);
+  border-left: 3px solid #9A2B2B;
+  color: #7A1E1E;
+  font-size: 0.83rem;
+}
+
+.checkout-totals-strip {
+  background-color: var(--bg-linen);
+  border: 1px solid var(--hairline);
+  padding: 0.95rem 1.15rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.api-mode-pill {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.58rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--wine-soft);
+  color: var(--wine);
+}
+
+@media (max-width: 640px) {
+  .form-grid-2,
+  .form-grid-3,
+  .fulfillment-toggle {
+    grid-template-columns: 1fr;
+  }
+}
