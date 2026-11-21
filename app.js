@@ -1,159 +1,27 @@
 /* ==========================================================================
-   O ESPANHOL — Empório Ibérico Gourmet · Brasília, DF
-   Interactive Catalog, Sommelier Pairing Studio, DF Delivery & Cart Drawer
+   O ESPANHOL — Interactive Engine for 17 Spanish Autonomous Communities
+   Interactive SVG Atlas, Dynamic Regional Design Motifs, Search, Sommelier & Cart
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  const ASSETS = window.__OESPANHOL_ASSETS__ || {
-    hero: "./assets/hero.jpg",
-    jamon: "./assets/jamon.jpg",
-    vinhos: "./assets/vinhos.jpg",
-    manchego: "./assets/manchego.jpg",
-    cestas: "./assets/cestas.jpg",
-    conservas: "./assets/conservas.jpg"
-  };
+  const { MOTIFS, REGIONS, EXTRA_ITEMS } = window.__OESPANHOL_DATA__;
 
-  const PRODUCTS = [
-    {
-      id: "jamon-bellota",
-      name: "Jamón Ibérico 100% Bellota",
-      category: "jamon",
-      categoryLabel: "Jamón & Embutidos",
-      dop: "D.O.P. Jabugo",
-      weight: "100g · Fatiado na faca",
-      price: 248,
-      img: ASSETS.jamon,
-      shortDesc: "Porco 100% raça ibérica criado em montanera de bolotas, cura natural de 36 meses e gordura oleica untuosa.",
-      origin: "Sierra de Aracena, Huelva",
-      aging: "36 meses em adega natural",
-      serving: "22 °C — retirar da embalagem 25 min antes",
-      pairing: "Rioja Gran Reserva, Cava Brut Nature ou Jerez Fino"
-    },
-    {
-      id: "paleta-cebo",
-      name: "Paleta Ibérica de Cebo de Campo",
-      category: "jamon",
-      categoryLabel: "Jamón & Embutidos",
-      dop: "Guijuelo · Salamanca",
-      weight: "100g · Fatiado na faca",
-      price: 138,
-      img: ASSETS.jamon,
-      shortDesc: "Sabor mais intenso e aromático, corte delicado na faca, ideal para tábuas de aperitivo e pão com tomate.",
-      origin: "Guijuelo, Castela e Leão",
-      aging: "24 meses em secadouros de altitude",
-      serving: "21 °C sobre prato levemente morno",
-      pairing: "Ribera del Duero Crianza ou Vermute Rojo"
-    },
-    {
-      id: "rioja-gran-reserva",
-      name: "Rioja Gran Reserva 2016",
-      category: "vinhos",
-      categoryLabel: "Vinhos & Vermute",
-      dop: "D.O.Ca. Rioja",
-      weight: "750 ml · Tempranillo",
-      price: 310,
-      img: ASSETS.vinhos,
-      shortDesc: "Vinhedos velhos de Rioja Alta com 24 meses em carvalho americano e longo afinamento em garrafa. Taninos de seda.",
-      origin: "Haro, Rioja Alta",
-      aging: "24 meses em barrica + 36 meses em garrafa",
-      serving: "17 °C — decantar 30 minutos",
-      pairing: "Jamón 100% Bellota e Queijo Manchego Curado"
-    },
-    {
-      id: "ribera-crianza",
-      name: "Ribera del Duero Crianza 2020",
-      category: "vinhos",
-      categoryLabel: "Vinhos & Vermute",
-      dop: "D.O. Ribera del Duero",
-      weight: "750 ml · Tinto Fino",
-      price: 225,
-      img: ASSETS.vinhos,
-      shortDesc: "Fruta negra madura, especiarias finas e frescor mineral de vinhedos a 850 metros de altitude.",
-      origin: "Pesquera de Duero, Valladolid",
-      aging: "14 meses em carvalho francês",
-      serving: "16 °C em taça Bordeaux",
-      pairing: "Paleta Ibérica, embutidos curados e cordeiro"
-    },
-    {
-      id: "manchego-12m",
-      name: "Queijo Manchego Artesano 12 Meses",
-      category: "queijos",
-      categoryLabel: "Queijos & Azeites",
-      dop: "D.O.P. La Mancha",
-      weight: "250g · Leite cru de ovelha",
-      price: 118,
-      img: ASSETS.manchego,
-      shortDesc: "Elaborado com leite cru de ovelha Manchega, pasta firme com cristais de maturação e final amanteigado de nozes.",
-      origin: "Ciudad Real, Castela-La Mancha",
-      aging: "12 meses em tábuas de madeira",
-      serving: "20 °C em cunhas finas com fio de AOVE",
-      pairing: "Azeite Picual, amêndoas Marcona e Rioja Reserva"
-    },
-    {
-      id: "aove-picual",
-      name: "Azeite Virgem Extra Picual Precoce",
-      category: "queijos",
-      categoryLabel: "Queijos & Azeites",
-      dop: "Jaén · Colheita Outubro",
-      weight: "500 ml · Acidez 0,14%",
-      price: 164,
-      img: ASSETS.manchego,
-      shortDesc: "Prensado a frio poucas horas após a colheita verde. Aromas vibrantes de folha de tomateiro, alcachofra e picância limpa.",
-      origin: "Sierra Mágina, Andaluzia",
-      aging: "Lote numerado · Safra atual",
-      serving: "Cru, na finalização de pães, queijos e peixes",
-      pairing: "Pão de fermentação natural, flor de sal e Manchego"
-    },
-    {
-      id: "dupla-conservas-vermute",
-      name: "Conservas da Galícia & Vermute Artesanal",
-      category: "conservas",
-      categoryLabel: "Conservas & Aperitivo",
-      dop: "Rías Baixas & Cantábrico",
-      weight: "2 latas + Vermute 750 ml",
-      price: 189,
-      img: ASSETS.conservas,
-      shortDesc: "Mexilhões grandes em escabeche suave, filés de anchova do Cantábrico em azeite e Vermute Rojo de ervas mediterrâneas.",
-      origin: "Cambados e Santoña, Norte da Espanha",
-      aging: "Conserva manual em lata de safra",
-      serving: "Vermute a 8 °C com gelo translúcido e casca de laranja",
-      pairing: "Azeitonas Gordal, batatas artesanais e fim de tarde"
-    },
-    {
-      id: "caixa-noite-lago",
-      name: "Caixa Degustação “Noite no Lago”",
-      category: "cestas",
-      categoryLabel: "Caixas Presente",
-      dop: "Curadoria Completa",
-      weight: "Caixa madeira + 5 itens",
-      price: 590,
-      img: ASSETS.cestas,
-      shortDesc: "Nossa assinatura para presentear em Brasília: Jamón 100% Bellota, Rioja Gran Reserva, Manchego 12m, AOVE Picual e Gordal em caixa de madeira.",
-      origin: "Seleção O Espanhol · Brasília",
-      aging: "Montada no dia com linho cru e cartão",
-      serving: "Serve perfeitamente de 4 a 6 convidados",
-      pairing: "Pronta para presentear ou abrir direto à mesa"
-    }
-  ];
-
-  const EXTRA_ITEMS = {
-    "clube-tertulia": {
-      id: "clube-tertulia",
-      name: "Clube La Mesa — Plano Tertúlia (1º mês)",
-      weight: "Assinatura Mensal · Frete incluso",
-      price: 390,
-      img: ASSETS.cestas
-    },
-    "clube-gran-reserva": {
-      id: "clube-gran-reserva",
-      name: "Clube La Mesa — Plano Gran Reserva (1º mês)",
-      weight: "Assinatura Mensal · Lotes raros",
-      price: 680,
-      img: ASSETS.vinhos
-    }
-  };
+  /* Flatten all 56 regional dishes into a fast lookup map with parent region metadata */
+  const DISH_INDEX = {};
+  REGIONS.forEach((region) => {
+    region.dishes.forEach((dish) => {
+      DISH_INDEX[dish.id] = Object.assign({}, dish, {
+        regionId: region.id,
+        regionName: region.name,
+        regionCode: region.code,
+        regionAccent: region.accent,
+        regionAccentSoft: region.accentSoft,
+        regionMotifKey: region.motifKey
+      });
+    });
+  });
 
   const DF_ZONES = [
     { id: "lago-sul", name: "Lago Sul", eta: "Até 2h30", fee: 24, freeMin: 350, note: "Rota prioritária refrigerada com saída às 11h, 15h e 18h30. Ideal para jantares e recepções à beira-lago." },
@@ -166,81 +34,91 @@
     { id: "aguas-claras", name: "Águas Claras", eta: "Até 3h00", fee: 26, freeMin: 400, note: "Duas janelas diárias refrigeradas (tarde e noite) com controle rigoroso de temperatura." }
   ];
 
-  const OCCASIONS = {
-    aperitivo: {
-      title: "Aperitivo ao Pôr do Sol",
-      note: "“Comece pelo vermute bem gelado com casca de laranja acompanhando as conservas da Galícia; quando o sol baixar, abra a Paleta Ibérica e o Manchego com um fio do azeite Picual.”",
+  const SOMMELIER_ROUTES = {
+    sul: {
+      title: "Rota do Sul & Dehesa",
+      note: "“Uma travessia ensolarada entre Andaluzia e Extremadura: comece com Salmorejo Cordobés e Fino de Jerez, siga para o Jamón 100% Bellota de Jabugo e encerre mergulhando pão rústico na cremosa Torta del Casar.”",
       build(guests) {
-        const packs = Math.max(1, Math.ceil(guests / 4));
-        const wines = Math.max(1, Math.ceil(guests / 4));
+        const packs = Math.max(1, Math.ceil(guests / 3));
         return [
-          { productId: "paleta-cebo", qty: packs },
-          { productId: "dupla-conservas-vermute", qty: Math.max(1, Math.ceil(guests / 6)) },
-          { productId: "manchego-12m", qty: packs },
-          { productId: "ribera-crianza", qty: wines }
+          { productId: "and-jamon-jabugo", qty: packs },
+          { productId: "and-salmorejo", qty: Math.max(1, Math.ceil(guests / 3)) },
+          { productId: "ext-torta-casar", qty: 1 },
+          { productId: "and-atum-jerez", qty: Math.max(1, Math.ceil(guests / 4)) }
         ];
       }
     },
-    jantar: {
-      title: "Jantar Íntimo Ibérico",
-      note: "“O protagonismo absoluto é do Jamón 100% Bellota em temperatura ambiente ao lado do Rioja Gran Reserva 2016 decantado por 30 minutos. O azeite precoce finaliza pães rústicos e o Manchego 12 meses.”",
+    norte: {
+      title: "Rota Atlântica — Norte Verde",
+      note: "“O frescor oceânico da Galícia, País Basco e Astúrias: abra com Gildas Donostiarras e Txakoli gelado, sirva o Polvo à Feira sobre tábuas de madeira com Albariño e feche com o Idiazabal defumado.”",
       build(guests) {
-        const jamonQty = Math.max(1, Math.ceil(guests / 3));
-        const wineQty = Math.max(1, Math.ceil(guests / 3));
         return [
-          { productId: "jamon-bellota", qty: jamonQty },
-          { productId: "rioja-gran-reserva", qty: wineQty },
-          { productId: "manchego-12m", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "aove-picual", qty: 1 }
+          { productId: "gal-pulpo", qty: Math.max(1, Math.ceil(guests / 3)) },
+          { productId: "eus-gildas", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "eus-idiazabal", qty: 1 },
+          { productId: "gal-albarino", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "ast-sidra", qty: Math.max(1, Math.ceil(guests / 6)) }
         ];
       }
     },
-    recepcao: {
-      title: "Recepção no Lago & Embaixadas",
-      note: "“Equilíbrio impecável entre dois perfis de tintos (Rioja e Ribera), abundância de Jamón 100% Bellota cortado na faca e conservas nobres do norte espanhol para impressionar convidados exigentes.”",
+    mediterraneo: {
+      title: "Rota Mediterrânea & Ilhas",
+      note: "“Almoço luminoso do Levante às Baleares: Escalivada catalã e Sobrassada de Mallorca com Cava Brut Nature enquanto a Paella Valenciana descansa por 5 minutos, fechando com Turrón de Jijona.”",
       build(guests) {
-        const jamonQty = Math.max(2, Math.ceil(guests / 3));
         return [
-          { productId: "jamon-bellota", qty: jamonQty },
-          { productId: "rioja-gran-reserva", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "ribera-crianza", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "manchego-12m", qty: Math.max(1, Math.ceil(guests / 4)) },
-          { productId: "dupla-conservas-vermute", qty: Math.max(1, Math.ceil(guests / 6)) }
+          { productId: "val-kit-paella", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "cat-escalivada", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "bal-sobrassada", qty: 1 },
+          { productId: "cat-cava", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "val-turron", qty: 1 }
         ];
       }
     },
-    presente: {
-      title: "Presente de Autor em Madeira",
-      note: "“Nossa Caixa Noite no Lago é finalizada à mão com linho cru e cartão em papel algodão. Para grupos maiores ou famílias, complementamos com azeite de colheita precoce e vermute artesanal.”",
+    meseta: {
+      title: "Rota da Meseta Real & La Rioja",
+      note: "“Clássicos solenes do interior espanhol: Vermute de Madri e azeitonas Campo Real no aperitivo, Queijo Manchego 12 meses, Paleta de Guijuelo e o Rioja Gran Reserva 2016 decantado.”",
       build(guests) {
-        const boxes = Math.max(1, Math.ceil(guests / 6));
-        const items = [{ productId: "caixa-noite-lago", qty: boxes }];
-        if (guests >= 6) items.push({ productId: "aove-picual", qty: 1 });
-        if (guests >= 10) items.push({ productId: "dupla-conservas-vermute", qty: 1 });
-        return items;
+        return [
+          { productId: "rio-gran-reserva", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "clm-manchego", qty: Math.max(1, Math.ceil(guests / 4)) },
+          { productId: "cyl-paleta-guijuelo", qty: Math.max(1, Math.ceil(guests / 3)) },
+          { productId: "mad-vermute", qty: 1 },
+          { productId: "rio-patatas", qty: Math.max(1, Math.ceil(guests / 4)) }
+        ];
       }
     }
   };
 
   /* State */
-  let activeCategory = "todos";
-  let activeOccasion = "aperitivo";
+  let activeMacro = "todas";
+  let activeRegionId = "andaluzia";
+  let viewMode = "region"; // "region" | "all"
+  let searchQuery = "";
+  let activeOccasion = "sul";
   let guestCount = 4;
   let activeZoneId = "lago-sul";
-  let cart = [
-    { id: "jamon-bellota", qty: 1 }
-  ];
+  let cart = [{ id: "and-jamon-jabugo", qty: 1 }];
   let toastTimer = null;
 
   /* Helpers */
   const formatBRL = (value) =>
     value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-  const findItem = (id) =>
-    PRODUCTS.find((p) => p.id === id) || EXTRA_ITEMS[id] || null;
+  const normalize = (str) =>
+    str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
 
-  const findZone = (id) =>
-    DF_ZONES.find((z) => z.id === id) || DF_ZONES[0];
+  const findItem = (id) => DISH_INDEX[id] || EXTRA_ITEMS[id] || null;
+  const findRegion = (id) => REGIONS.find((r) => r.id === id) || REGIONS[0];
+  const findZone = (id) => DF_ZONES.find((z) => z.id === id) || DF_ZONES[0];
+
+  function getFilteredRegions() {
+    return activeMacro === "todas"
+      ? REGIONS
+      : REGIONS.filter((r) => r.macro === activeMacro);
+  }
 
   function showToast(message) {
     const el = document.getElementById("toast");
@@ -250,74 +128,312 @@
     toastTimer = setTimeout(() => el.classList.remove("is-visible"), 2800);
   }
 
+  function applyRegionalTheme(region) {
+    document.documentElement.style.setProperty("--region-accent", region.accent);
+    document.documentElement.style.setProperty("--region-accent-soft", region.accentSoft);
+  }
+
   /* ========================================================================
-     1. Catalog Rendering & Filtering
+     1. Interactive Stylized Iberian SVG Map (17 Pins)
      ======================================================================== */
 
-  function renderCatalog() {
-    const grid = document.getElementById("product-grid");
-    const filtered =
-      activeCategory === "todos"
-        ? PRODUCTS
-        : PRODUCTS.filter((p) => p.category === activeCategory);
+  function renderMapPins() {
+    const pinsLayer = document.getElementById("atlas-map-pins");
+    const visibleIds = new Set(getFilteredRegions().map((r) => r.id));
 
-    grid.innerHTML = filtered
-      .map(
-        (p) => `
-      <article class="product-card" data-product-id="${p.id}">
-        <div class="product-media">
-          <img src="${p.img}" alt="${p.name}" loading="lazy" />
-          <span class="product-dop">${p.dop}</span>
-        </div>
-        <div class="product-body">
-          <span class="product-category">${p.categoryLabel}</span>
-          <h3 class="product-name">${p.name}</h3>
-          <p class="product-desc">${p.shortDesc}</p>
-          <div class="product-meta-row">
-            <span class="product-weight">${p.weight}</span>
-            <span class="product-price">${formatBRL(p.price)}</span>
-          </div>
-          <div class="product-actions">
-            <button class="btn btn--secondary btn--sm js-open-detail" type="button" data-id="${p.id}">
-              Notas
-            </button>
-            <button class="btn btn--primary btn--sm js-add-cart" type="button" data-id="${p.id}">
-              + Sacola
-            </button>
-          </div>
-        </div>
-      </article>`
-      )
+    pinsLayer.innerHTML = REGIONS.map((r) => {
+      const isActive = r.id === activeRegionId;
+      const isDimmed = !visibleIds.has(r.id);
+      const radius = isActive ? 12 : 9.2;
+      return `
+        <g class="map-pin ${isActive ? "is-active" : ""} ${isDimmed ? "is-dimmed" : ""}"
+           data-region-id="${r.id}"
+           role="button"
+           tabindex="0"
+           aria-label="${r.code} ${r.name} — ${r.capital}">
+          <circle class="map-pin-ring" cx="${r.mapPos.x}" cy="${r.mapPos.y}" r="${radius + 5}"
+                  fill="none" stroke="${r.accent}" stroke-width="1.5" stroke-dasharray="2 2"/>
+          <circle class="map-pin-dot" cx="${r.mapPos.x}" cy="${r.mapPos.y}" r="${radius}"
+                  fill="${r.accent}" stroke="#FFFDF9" stroke-width="${isActive ? 2.2 : 1.4}"/>
+          <text class="map-pin-code" x="${r.mapPos.x}" y="${r.mapPos.y}">${r.code}</text>
+        </g>`;
+    }).join("");
+
+    const active = findRegion(activeRegionId);
+    document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
+  }
+
+  /* ========================================================================
+     2. 17-Community Directory Index
+     ======================================================================== */
+
+  function renderDirectory() {
+    const dir = document.getElementById("region-directory");
+    const list = getFilteredRegions();
+
+    dir.innerHTML = list
+      .map((r) => {
+        const isActive = r.id === activeRegionId;
+        return `
+          <button class="region-pill ${isActive ? "is-active" : ""}" type="button" data-region-id="${r.id}">
+            <span class="region-pill-left">
+              <span class="region-dot" style="background-color:${r.accent};"></span>
+              <span class="region-pill-text">
+                <span class="region-pill-name">${r.code} · ${r.name}</span>
+                <span class="region-pill-cap">${r.capital} · ${r.macroLabel}</span>
+              </span>
+            </span>
+            <span class="region-pill-count">${r.dishes.length} pratos</span>
+          </button>`;
+      })
       .join("");
   }
 
   /* ========================================================================
-     2. Product Tasting Sheet Modal
+     3. Dish Card Renderer (Shared across Regional Dossier & Full Menu)
+     ======================================================================== */
+
+  function renderDishCard(dish, regionAccent) {
+    return `
+      <article class="product-card" style="--card-accent:${regionAccent};">
+        <div class="product-media">
+          <img src="${dish.img}" alt="${dish.name}" loading="lazy" />
+          <span class="product-dop">${dish.dop}</span>
+        </div>
+        <div class="product-body">
+          <span class="product-category">${dish.type}</span>
+          <h4 class="product-name">${dish.name}</h4>
+          <p class="product-desc">${dish.shortDesc}</p>
+          <div class="product-meta-row">
+            <span class="product-weight">${dish.weight}</span>
+            <span class="product-price">${formatBRL(dish.price)}</span>
+          </div>
+          <div class="product-actions">
+            <button class="btn btn--secondary btn--sm js-open-detail" type="button" data-id="${dish.id}">
+              Notas
+            </button>
+            <button class="btn btn--sm js-add-cart" type="button" data-id="${dish.id}"
+                    style="background-color:${regionAccent}; border-color:${regionAccent}; color:#F7F1E8;">
+              + Sacola
+            </button>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  /* ========================================================================
+     4. Single-Region Editorial Dossier
+     ======================================================================== */
+
+  function renderRegionalDossier() {
+    const region = findRegion(activeRegionId);
+    applyRegionalTheme(region);
+
+    const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar;
+    const repeatedMotifs = Array.from({ length: 7 }, () => motifSvg).join("");
+
+    const dossier = document.getElementById("regional-dossier");
+    dossier.innerHTML = `
+      <div class="regional-frieze">
+        <div class="frieze-motifs" aria-hidden="true">${repeatedMotifs}</div>
+        <span class="frieze-caption">${region.motifLabel}</span>
+      </div>
+
+      <div class="dossier-header">
+        <div>
+          <div class="dossier-meta-line">
+            <span class="dossier-code">Comunidade ${region.code} / 17</span>
+            <span class="kicker kicker--region">${region.macroLabel}</span>
+          </div>
+
+          <h3 class="dossier-title">
+            ${region.name}
+            <span class="dossier-endonym">${region.spanishName}</span>
+          </h3>
+
+          <p class="dossier-tagline">${region.tagline}</p>
+          <p class="dossier-story">${region.story}</p>
+
+          <div class="dossier-dops">
+            ${region.dops.map((d) => `<span class="dop-tag">${d}</span>`).join("")}
+          </div>
+
+          <p class="dossier-ritual">${region.ritual}</p>
+        </div>
+
+        <aside class="dossier-emblem-box">
+          <div class="dossier-emblem-svg">${motifSvg}</div>
+          <span class="dossier-capital">Capital: ${region.capital}</span>
+          <span class="dossier-motif-name">${region.motifLabel}</span>
+          <div class="dossier-nav-btns">
+            <button type="button" id="prev-region-btn">← Anterior</button>
+            <button type="button" id="next-region-btn">Próxima →</button>
+          </div>
+        </aside>
+      </div>
+
+      <div class="dossier-dishes-wrap">
+        <div class="dossier-dishes-head">
+          <h4 class="dossier-dishes-title">Cardápio Tradicional — ${region.name}</h4>
+          <span style="font-size:0.78rem; color:var(--ink-muted);">${region.dishes.length} especialidades selecionadas para entrega em Brasília</span>
+        </div>
+        <div class="product-grid">
+          ${region.dishes.map((d) => renderDishCard(d, region.accent)).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  /* ========================================================================
+     5. Full Menu / Live Search View (Across All 17 Regions)
+     ======================================================================== */
+
+  function renderFullMenu() {
+    const container = document.getElementById("full-menu-container");
+    const q = normalize(searchQuery.trim());
+    const regionsPool = getFilteredRegions();
+
+    const chapters = regionsPool
+      .map((region) => {
+        const regionMatch =
+          !q ||
+          normalize(region.name).includes(q) ||
+          normalize(region.spanishName).includes(q) ||
+          normalize(region.capital).includes(q) ||
+          normalize(region.tagline).includes(q);
+
+        const dishes = regionMatch
+          ? region.dishes
+          : region.dishes.filter(
+              (d) =>
+                normalize(d.name).includes(q) ||
+                normalize(d.shortDesc).includes(q) ||
+                normalize(d.dop).includes(q) ||
+                normalize(d.type).includes(q)
+            );
+
+        return { region, dishes };
+      })
+      .filter((c) => c.dishes.length > 0);
+
+    if (chapters.length === 0) {
+      container.innerHTML = `
+        <div class="empty-search-state">
+          <strong style="font-family:var(--font-serif); font-size:1.35rem; color:var(--ink-primary);">Nenhum prato encontrado para “${searchQuery}”</strong>
+          <p style="margin:0.5rem 0 1.25rem; font-size:0.9rem;">Experimente buscar por “paella”, “polvo”, “jamón”, “queijo”, “rioja” ou “gilda”.</p>
+          <button type="button" class="btn btn--secondary btn--sm" id="clear-search-btn">Limpar busca</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = chapters
+      .map(({ region, dishes }) => {
+        const motifSvg = MOTIFS[region.motifKey] || MOTIFS.mudejar;
+        return `
+          <section class="region-chapter" style="--chapter-accent:${region.accent};">
+            <div class="region-chapter-head">
+              <div class="region-chapter-id">
+                <div class="region-chapter-motif">${motifSvg}</div>
+                <div>
+                  <h3 class="region-chapter-title">${region.code} · ${region.name}</h3>
+                  <div class="region-chapter-sub">${region.capital} · ${region.tagline}</div>
+                </div>
+              </div>
+              <button type="button" class="btn btn--secondary btn--sm js-focus-region" data-region-id="${region.id}">
+                Ver Dossiê Regional
+              </button>
+            </div>
+            <div class="product-grid">
+              ${dishes.map((d) => renderDishCard(d, region.accent)).join("")}
+            </div>
+          </section>`;
+      })
+      .join("");
+  }
+
+  /* Master Catalog View Sync */
+  function renderCatalogArea() {
+    const hasSearch = searchQuery.trim().length > 0;
+    const showFull = viewMode === "all" || hasSearch;
+
+    document.getElementById("atlas-navigator").hidden = showFull;
+    document.getElementById("regional-dossier").hidden = showFull;
+    document.getElementById("full-menu-container").hidden = !showFull;
+
+    document.getElementById("view-by-region-btn").classList.toggle("is-active", !showFull);
+    document.getElementById("view-all-btn").classList.toggle("is-active", showFull);
+
+    if (showFull) {
+      renderFullMenu();
+    } else {
+      const visible = getFilteredRegions();
+      if (!visible.some((r) => r.id === activeRegionId)) {
+        activeRegionId = visible[0].id;
+      }
+      renderMapPins();
+      renderDirectory();
+      renderRegionalDossier();
+    }
+  }
+
+  function selectRegion(regionId, scrollToDossier = false) {
+    activeRegionId = regionId;
+    searchQuery = "";
+    document.getElementById("menu-search").value = "";
+    viewMode = "region";
+    const reg = findRegion(regionId);
+    if (activeMacro !== "todas" && reg.macro !== activeMacro) {
+      activeMacro = "todas";
+      syncMacroTabs();
+    }
+    renderCatalogArea();
+    if (scrollToDossier) {
+      document.getElementById("regional-dossier").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }
+
+  function stepRegion(delta) {
+    const list = getFilteredRegions();
+    const idx = list.findIndex((r) => r.id === activeRegionId);
+    const nextIdx = (idx + delta + list.length) % list.length;
+    selectRegion(list[nextIdx].id, false);
+  }
+
+  function syncMacroTabs() {
+    document.querySelectorAll(".macro-tab").forEach((t) => {
+      const active = t.dataset.macro === activeMacro;
+      t.classList.toggle("is-active", active);
+      t.setAttribute("aria-selected", String(active));
+    });
+  }
+
+  /* ========================================================================
+     6. Product Tasting Sheet Modal
      ======================================================================== */
 
   function openProductModal(productId) {
-    const p = PRODUCTS.find((item) => item.id === productId);
+    const p = DISH_INDEX[productId];
     if (!p) return;
 
     const modalBody = document.getElementById("product-modal-body");
     modalBody.innerHTML = `
       <img class="product-modal-img" src="${p.img}" alt="${p.name}" />
       <div class="product-modal-content">
-        <span class="kicker">${p.dop}</span>
-        <h3 id="modal-product-title" style="font-size: 1.85rem; margin-top: 0.4rem;">${p.name}</h3>
-        <p style="color: var(--ink-secondary); font-size: 0.92rem; margin: 0.9rem 0 0;">${p.shortDesc}</p>
+        <span class="kicker" style="color:${p.regionAccent};">${p.regionName} · ${p.dop}</span>
+        <h3 id="modal-product-title" style="font-size: 1.75rem; margin-top: 0.4rem;">${p.name}</h3>
+        <p style="color: var(--ink-secondary); font-size: 0.91rem; margin: 0.85rem 0 0;">${p.shortDesc}</p>
 
         <div class="tasting-specs">
           <div>
-            <span class="spec-label">Origem</span>
+            <span class="spec-label">Origem Regional</span>
             <span class="spec-val">${p.origin}</span>
           </div>
           <div>
-            <span class="spec-label">Maturação / Safra</span>
+            <span class="spec-label">Preparo / Maturação</span>
             <span class="spec-val">${p.aging}</span>
           </div>
           <div>
-            <span class="spec-label">Serviço Ideal</span>
+            <span class="spec-label">Ritual de Serviço</span>
             <span class="spec-val">${p.serving}</span>
           </div>
           <div>
@@ -329,9 +445,10 @@
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
           <div>
             <div style="font-size: 0.74rem; color: var(--ink-muted);">${p.weight}</div>
-            <div style="font-family: var(--font-serif); font-size: 1.65rem;" class="tabular">${formatBRL(p.price)}</div>
+            <div style="font-family: var(--font-serif); font-size: 1.6rem;" class="tabular">${formatBRL(p.price)}</div>
           </div>
-          <button class="btn btn--primary js-modal-add" type="button" data-id="${p.id}">
+          <button class="btn js-modal-add" type="button" data-id="${p.id}"
+                  style="background-color:${p.regionAccent}; border-color:${p.regionAccent}; color:#F7F1E8;">
             Adicionar à Sacola
           </button>
         </div>
@@ -342,11 +459,11 @@
   }
 
   /* ========================================================================
-     3. Interactive Sommelier Pairing Studio
+     7. Regional Sommelier Pairing Studio
      ======================================================================== */
 
   function renderSommelier() {
-    const cfg = OCCASIONS[activeOccasion];
+    const cfg = SOMMELIER_ROUTES[activeOccasion];
     const selection = cfg.build(guestCount);
 
     document.getElementById("guest-readout").textContent = `${guestCount} pessoas`;
@@ -366,7 +483,7 @@
           <li class="pairing-item">
             <div>
               <span class="pairing-item-name">${qty}× ${p.name}</span>
-              <span class="pairing-item-detail">${p.dop} · ${p.weight}</span>
+              <span class="pairing-item-detail">${p.regionName} · ${p.dop} · ${p.weight}</span>
             </div>
             <span class="pairing-item-price">${formatBRL(lineTotal)}</span>
           </li>`;
@@ -378,11 +495,11 @@
 
     document.getElementById("pairing-original").textContent = formatBRL(rawTotal);
     document.getElementById("pairing-total").textContent = formatBRL(discounted);
-    document.getElementById("pairing-saving").textContent = `Inclui 8% de cortesia de curadoria (economia de ${formatBRL(saving)})`;
+    document.getElementById("pairing-saving").textContent = `Inclui 8% de cortesia na rota completa (economia de ${formatBRL(saving)})`;
   }
 
   /* ========================================================================
-     4. DF Delivery Zone Checker
+     8. DF Delivery Zone Checker
      ======================================================================== */
 
   function renderZones() {
@@ -419,7 +536,7 @@
   }
 
   /* ========================================================================
-     5. Cart Drawer Logic
+     9. Cart Drawer Logic
      ======================================================================== */
 
   function addToCart(id, qty = 1, silent = false) {
@@ -433,7 +550,7 @@
     }
     renderCart();
     if (!silent) {
-      showToast(`Adicionado à sacola: ${item.name}`);
+      showToast(`Adicionado (${item.regionName}): ${item.name}`);
     }
   }
 
@@ -500,8 +617,8 @@
       container.innerHTML = `
         <div class="cart-empty">
           <strong style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--ink-primary);">Sua sacola está vazia</strong>
-          <p>Explore nossa curadoria de jamón, vinhos de guarda e azeites de colheita precoce.</p>
-          <button class="btn btn--secondary btn--sm" type="button" id="empty-explore-btn">Ver Curadoria</button>
+          <p>Explore o mapa das 17 Comunidades Autônomas e monte sua mesa ibérica.</p>
+          <button class="btn btn--secondary btn--sm" type="button" id="empty-explore-btn">Explorar 17 Regiões</button>
         </div>`;
     } else {
       container.innerHTML = cart
@@ -512,7 +629,7 @@
               <img src="${p.img}" alt="${p.name}" />
               <div>
                 <div class="cart-item-title">${p.name}</div>
-                <div class="cart-item-meta">${p.weight} · ${formatBRL(p.price)}</div>
+                <div class="cart-item-meta">${p.regionName} · ${p.weight} · ${formatBRL(p.price)}</div>
                 <div class="cart-item-row">
                   <div class="qty-control">
                     <button type="button" class="js-qty-dec" data-id="${p.id}" aria-label="Diminuir quantidade">−</button>
@@ -537,7 +654,7 @@
   }
 
   /* ========================================================================
-     6. Drawers, Modals & Checkout Summary
+     10. Drawers, Modals & Checkout Summary
      ======================================================================== */
 
   function openCart() {
@@ -577,11 +694,11 @@
     const { subtotal, shipping, total, zone } = computeCartTotals();
     const lines = [
       "PEDIDO — O ESPANHOL (oespanhol.com.br)",
-      "Empório Ibérico Gourmet · Brasília, DF",
+      "Atlas Gastronômico das 17 Comunidades · Brasília, DF",
       "----------------------------------------",
       ...cart.map((entry) => {
         const p = findItem(entry.id);
-        return `• ${entry.qty}x ${p.name} (${p.weight}) — ${formatBRL(p.price * entry.qty)}`;
+        return `• ${entry.qty}x ${p.name} [${p.regionName}] — ${formatBRL(p.price * entry.qty)}`;
       }),
       "----------------------------------------",
       `Região de entrega: ${zone.name} (${zone.eta})`,
@@ -593,25 +710,87 @@
   }
 
   /* ========================================================================
-     7. Event Listeners & Init
+     11. Event Bindings
      ======================================================================== */
 
   function bindEvents() {
-    // Category tabs
-    document.getElementById("catalog-filters").addEventListener("click", (e) => {
-      const btn = e.target.closest(".filter-tab");
+    // Macro-region tabs
+    document.getElementById("macro-tabs").addEventListener("click", (e) => {
+      const btn = e.target.closest(".macro-tab");
       if (!btn) return;
-      activeCategory = btn.dataset.category;
-      document.querySelectorAll(".filter-tab").forEach((t) => {
-        const active = t === btn;
-        t.classList.toggle("is-active", active);
-        t.setAttribute("aria-selected", String(active));
-      });
-      renderCatalog();
+      activeMacro = btn.dataset.macro;
+      syncMacroTabs();
+      renderCatalogArea();
     });
 
-    // Product grid delegation
-    document.getElementById("product-grid").addEventListener("click", (e) => {
+    // Footer macro shortcuts
+    document.querySelectorAll(".js-footer-macro").forEach((link) => {
+      link.addEventListener("click", () => {
+        activeMacro = link.dataset.macro;
+        viewMode = "region";
+        searchQuery = "";
+        document.getElementById("menu-search").value = "";
+        syncMacroTabs();
+        renderCatalogArea();
+      });
+    });
+
+    // Search input
+    document.getElementById("menu-search").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderCatalogArea();
+    });
+
+    // View mode switch
+    document.getElementById("view-by-region-btn").addEventListener("click", () => {
+      viewMode = "region";
+      searchQuery = "";
+      document.getElementById("menu-search").value = "";
+      renderCatalogArea();
+    });
+
+    document.getElementById("view-all-btn").addEventListener("click", () => {
+      viewMode = "all";
+      renderCatalogArea();
+    });
+
+    // SVG Map pins click & hover
+    const pinsLayer = document.getElementById("atlas-map-pins");
+    pinsLayer.addEventListener("click", (e) => {
+      const pin = e.target.closest(".map-pin");
+      if (!pin) return;
+      selectRegion(pin.dataset.regionId, true);
+    });
+    pinsLayer.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        const pin = e.target.closest(".map-pin");
+        if (pin) {
+          e.preventDefault();
+          selectRegion(pin.dataset.regionId, true);
+        }
+      }
+    });
+    pinsLayer.addEventListener("mouseover", (e) => {
+      const pin = e.target.closest(".map-pin");
+      if (!pin) return;
+      const r = findRegion(pin.dataset.regionId);
+      document.getElementById("map-hover-readout").textContent = `${r.code} · ${r.name} (${r.capital})`;
+    });
+    pinsLayer.addEventListener("mouseleave", () => {
+      const active = findRegion(activeRegionId);
+      document.getElementById("map-hover-readout").textContent = `${active.code} · ${active.name} (${active.capital})`;
+    });
+
+    // 17-Community directory clicks
+    document.getElementById("region-directory").addEventListener("click", (e) => {
+      const btn = e.target.closest(".region-pill");
+      if (!btn) return;
+      selectRegion(btn.dataset.regionId, false);
+    });
+
+    // Delegated clicks inside Dossier & Full Menu (add to cart, tasting notes, prev/next, focus region, clear search)
+    const curadoriaSection = document.getElementById("curadoria");
+    curadoriaSection.addEventListener("click", (e) => {
       const addBtn = e.target.closest(".js-add-cart");
       if (addBtn) {
         addToCart(addBtn.dataset.id);
@@ -620,10 +799,29 @@
       const detailBtn = e.target.closest(".js-open-detail");
       if (detailBtn) {
         openProductModal(detailBtn.dataset.id);
+        return;
+      }
+      if (e.target.closest("#prev-region-btn")) {
+        stepRegion(-1);
+        return;
+      }
+      if (e.target.closest("#next-region-btn")) {
+        stepRegion(1);
+        return;
+      }
+      const focusBtn = e.target.closest(".js-focus-region");
+      if (focusBtn) {
+        selectRegion(focusBtn.dataset.regionId, true);
+        return;
+      }
+      if (e.target.closest("#clear-search-btn")) {
+        searchQuery = "";
+        document.getElementById("menu-search").value = "";
+        renderCatalogArea();
       }
     });
 
-    // Product modal add to cart
+    // Product modal add
     document.getElementById("product-modal-body").addEventListener("click", (e) => {
       const btn = e.target.closest(".js-modal-add");
       if (!btn) return;
@@ -632,7 +830,7 @@
       openCart();
     });
 
-    // Sommelier controls
+    // Sommelier routes
     document.getElementById("occasion-grid").addEventListener("click", (e) => {
       const btn = e.target.closest(".occasion-btn");
       if (!btn) return;
@@ -649,13 +847,13 @@
     });
 
     document.getElementById("add-pairing-btn").addEventListener("click", () => {
-      const selection = OCCASIONS[activeOccasion].build(guestCount);
+      const selection = SOMMELIER_ROUTES[activeOccasion].build(guestCount);
       selection.forEach(({ productId, qty }) => addToCart(productId, qty, true));
-      showToast(`Seleção "${OCCASIONS[activeOccasion].title}" adicionada à sacola!`);
+      showToast(`Rota "${SOMMELIER_ROUTES[activeOccasion].title}" adicionada à sacola!`);
       openCart();
     });
 
-    // Club plans
+    // Club plans & corporate
     document.querySelectorAll(".club-add-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         addToCart(btn.dataset.planId);
@@ -667,11 +865,11 @@
       document.getElementById("order-summary-text").textContent = [
         "SOLICITAÇÃO CONCIERGE CORPORATIVO — O ESPANHOL",
         "----------------------------------------",
-        "Interesse: Caixas Presente em Madeira / Eventos & Embaixadas em Brasília",
+        "Interesse: Caixas Presente Temáticas por Comunidade Autônoma / Eventos em Brasília",
         "Serviços disponíveis:",
-        "• Caixas personalizadas a partir de 6 unidades",
-        "• Cartão em papel algodão com assinatura institucional",
-        "• Maestro cortador de Jamón ao vivo sob reserva",
+        "• Caixas em madeira natural (a partir de 6 unidades)",
+        "• Cartão em papel algodão com motivo regional impresso",
+        "• Maestro cortador de Jamón ao vivo sob reserva no Lago Sul",
         "",
         "Contato Concierge: contato@oespanhol.com.br | (61) 99900-1928"
       ].join("\n");
@@ -693,7 +891,7 @@
       renderCart();
     });
 
-    // Cart drawer controls
+    // Cart drawer
     document.getElementById("open-cart-btn").addEventListener("click", openCart);
     document.getElementById("close-cart-btn").addEventListener("click", closeCart);
     document.getElementById("overlay").addEventListener("click", () => {
@@ -743,7 +941,6 @@
       showToast("Pedido registrado no modo demonstrativo. ¡Muchas gracias!");
     });
 
-    // Modal closes & Escape
     document.getElementById("close-product-modal").addEventListener("click", closeAllModals);
     document.getElementById("close-checkout-modal").addEventListener("click", closeAllModals);
     document.addEventListener("keydown", (e) => {
@@ -753,7 +950,7 @@
       }
     });
 
-    // Mobile menu
+    // Mobile nav
     const menuBtn = document.getElementById("mobile-menu-btn");
     const mobileNav = document.getElementById("mobile-nav");
     menuBtn.addEventListener("click", () => {
@@ -789,7 +986,7 @@
   }
 
   /* Boot */
-  renderCatalog();
+  renderCatalogArea();
   renderSommelier();
   renderZones();
   renderCart();
